@@ -168,57 +168,52 @@
 
     let lastClicked = 0;
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  const overlay = document.getElementById("overlay-blocker");
-  const loadingMsg = document.getElementById("iframe-loading-msg");
-  const nameLC = name.toLowerCase();
+    function playChannel(name, url) {
+      const now = Date.now();
+      if (now - lastClicked < 1000) return;
+      lastClicked = now;
 
-  title.textContent = `Now Viewing: ${name}`;
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      const overlay = document.getElementById("overlay-blocker");
+      const loadingMsg = document.getElementById("iframe-loading-msg");
+      const nameLC = name.toLowerCase();
+      const currentURL = frame.getAttribute("src");
 
-  if (["yomovies", "einthusan"].some(sub => nameLC.includes(sub))) {
-    // open in new tab for these only
-    const tab = window.open(url, "_blank");
-    frame.srcdoc = `<div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;"><strong>${name} is Playing in Another Tab</strong></div>`;
-    const checkClosed = setInterval(() => {
-      if (tab.closed) {
-        clearInterval(checkClosed);
-        frame.removeAttribute("srcdoc");
-        frame.src = "";
-        title.textContent = "Select a channel to view";
+      if (currentURL === url) return;
+
+      title.textContent = `Now Viewing: ${name}`;
+
+      // Channels forced to open in new tab due to iframe restrictions (e.g. YouTube embedded videos blocked)
+      const forceNewTab = ["yomovies", "einthusan", "abzy"];
+      if (forceNewTab.some(sub => nameLC.includes(sub))) {
+        window.open(url, "_blank");
+        frame.srcdoc = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+            <strong>${name} is Playing in Another Tab</strong>
+          </div>
+        `;
+        return;
       }
-    }, 1000);
-    return;
-  }
 
-  // For ABZY TV: show a message that YouTube videos will open in new tab
-  if (nameLC.includes("abzy")) {
-    alert("Note: YouTube videos inside ABZY TV will open in a new tab due to browser restrictions.");
-  }
+      frame.removeAttribute("srcdoc");
+      frame.src = "";
+      loadingMsg.style.display = "block";
+      frame.onload = () => {
+        loadingMsg.style.display = "none";
+      };
 
-  // Remove srcdoc and reset
-  frame.removeAttribute("srcdoc");
-  frame.src = "";
-  loadingMsg.style.display = "block";
-  frame.onload = () => {
-    loadingMsg.style.display = "none";
-  };
+      if (nameLC.includes("playdesi")) {
+        overlay.style.display = "block";
+        overlay.onclick = () => overlay.style.display = "none";
+      } else {
+        overlay.style.display = "none";
+      }
 
-  if (nameLC.includes("playdesi") || nameLC.includes("abzy")) {
-    // Allow popups inside iframe for these two sites
-    frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups");
-    overlay.style.display = "block";
-    overlay.onclick = () => (overlay.style.display = "none");
-  } else {
-    frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms"); // no popups allowed for others
-    overlay.style.display = "none";
-  }
+      frame.src = url;
+    }
 
-  frame.src = url;
-}
     renderChannels(playlist);
   </script>
 </body>
 </html>
-
