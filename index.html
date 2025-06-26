@@ -171,25 +171,20 @@
 function playChannel(name, url) {
   const frame = document.getElementById("channel-frame");
   const title = document.getElementById("playerTitle");
+  const overlay = document.getElementById("overlay-blocker");
   title.textContent = `Now Viewing: ${name}`;
   const nameLC = name.toLowerCase();
 
-  // Clear iframe before playing anything
   frame.removeAttribute("srcdoc");
   frame.src = "";
 
   if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
-    // Always open in new tab on click
     const tab = window.open(url, "_blank");
-
-    // Show placeholder inside iframe
     frame.srcdoc = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
         <strong>${name} is Playing on Another Tab</strong>
       </div>
     `;
-
-    // Periodically clear the iframe message once popup tab is closed
     const checkClosed = setInterval(() => {
       if (tab.closed) {
         clearInterval(checkClosed);
@@ -202,7 +197,15 @@ function playChannel(name, url) {
   }
 
   if (nameLC.includes("playdesi")) {
-    blockUnwantedPopups();
+    // Show overlay to trap unwanted popups
+    overlay.style.display = "block";
+
+    // Hide overlay after first click (suppress initial popup)
+    overlay.onclick = () => {
+      overlay.style.display = "none";
+    };
+  } else {
+    overlay.style.display = "none";
   }
 
   frame.src = url;
