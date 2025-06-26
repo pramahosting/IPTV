@@ -1,53 +1,53 @@
 #EXTM3U
 
-##### https://iptv-org.github.io/
-###### --- 🎬 SAMPLE MOVIES & SERIES (TO BE FILLED FROM YOMOVIES / PLAYDESI) --- ######
+########## 🎬 ENTERTAINMENT ##########
 
-#EXTINF:-1 tvg-id="yomovie1" tvg-name="Yomovie" group-title="Movies", YoMovies
+#EXTINF:-1 tvg-id="yomovie1" tvg-name="YoMovies" group-title="Entertainment", YoMovies
 https://yomovies.design/
 
-#EXTINF:-1 tvg-id="playdesi1" tvg-name="PlayDesi" group-title="Series", PlayDesi
+#EXTINF:-1 tvg-id="playdesi1" tvg-name="PlayDesi" group-title="Entertainment", PlayDesi
 https://playdesi.info/
 
-###### --- 📺 YUPPTV FAST CHANNELS (TO BE FILLED AFTER INSPECTION) --- ######
+#EXTINF:-1 tvg-id="HindiEntertainment" tvg-name="Abzy TV" group-title="Entertainment", Abzy TV
+https://abzy.com/
+
+#EXTINF:-1 tvg-id="UrduEntertainment1" tvg-name="Geo TV" group-title="Entertainment", Geo TV
+https://www.harpalgeo.tv/
+
+#EXTINF:-1 tvg-id="UrduEntertainment2" tvg-name="ARY Zindagi TV" group-title="Entertainment", ARY Zindagi TV
+https://www.aryzindagi.tv/
+
+#EXTINF:-1 tvg-id="UrduEntertainment3" tvg-name="Hum TV" group-title="Entertainment", Hum TV
+https://hum.tv/
+
+########## 📰 NEWS ##########
 
 #EXTINF:-1 tvg-id="yuppnews" tvg-name="YuppTV News" group-title="News", YuppTV News
 https://www.yupptv.com/fast-tv
 
-###### --- ✅ FREE PUBLIC IPTV CHANNELS (INCLUDING URDU & HINDI) --- ######
-
 #EXTINF:-1 tvg-id="AlJazeera" tvg-name="Al Jazeera English" group-title="News", Al Jazeera
 https://live-hls-web-aje.getaj.net/AJE/01.m3u8
 
-#EXTINF:-1 tvg-id="HindiNews" tvg-name="Aaj Tak" group-title="Hindi News", Aaj Tak
+#EXTINF:-1 tvg-id="HindiNews" tvg-name="Aaj Tak" group-title="News", Aaj Tak
 https://www.aajtak.in/livetv
 
-#EXTINF:-1 tvg-id="HindiNews2" tvg-name="ABP News" group-title="Hindi News", ABP News
+#EXTINF:-1 tvg-id="HindiNews2" tvg-name="ABP News" group-title="News", ABP News
 https://www.abplive.com/
 
-#EXTINF:-1 tvg-id="UrduNews1" tvg-name="Duniya News Urdu" group-title="Urdu News", Duniya News
+#EXTINF:-1 tvg-id="UrduNews1" tvg-name="Dunya News" group-title="News", Dunya News
 https://dunyanews.tv/live/
 
-#EXTINF:-1 tvg-id="UrduNews2" tvg-name="Geo News" group-title="Urdu News", Geo News
+#EXTINF:-1 tvg-id="UrduNews2" tvg-name="Geo News" group-title="News", Geo News
 https://live.geo.tv/
 
-#EXTINF:-1 tvg-id="HindiEntertainment" tvg-name="Abzy TV" group-title="Hindi Enterainment", Abzy TV
-https://abzy.com/
+########## 🕉️ SPIRITUAL ##########
 
-#EXTINF:-1 tvg-id="UrduEntertainment1" tvg-name="Geo TV" group-title="Urdu Entertainment", Geo TV
-https://www.harpalgeo.tv/
-
-#EXTINF:-1 tvg-id="UrduEntertainment2" tvg-name="ARYZindagi TV" group-title="Urdu Entertainment", ARY Zindagi TV
-https://www.aryzindagi.tv/
-
-#EXTINF:-1 tvg-id="UrduEntertainment3" tvg-name="Hum TV" group-title="Urdu Entertainment", Hum TV
-https://hum.tv/
-
-#EXTINF:-1 tvg-id="HindiEntertainment1" tvg-name="Sanskar TV" group-title="Hindi Spiritual", Sanskar TV
+#EXTINF:-1 tvg-id="Spiritual1" tvg-name="Sanskar TV" group-title="Spiritual", Sanskar TV
 http://livetv.sanskartv.com:1935/sanskartv/sanskartv/playlist.m3u8
 
-#EXTINF:-1 tvg-id="HindiEntertainment2" tvg-name="Sadhna TV" group-title="Hindi Spiritual", Sadhna TV
+#EXTINF:-1 tvg-id="Spiritual2" tvg-name="Sadhna TV" group-title="Spiritual", Sadhna TV
 https://cdn.smartstream.video/sadhna/sadhna.stream/playlist.m3u8
 
-#EXTINF:-1 tvg-id="HindiEntertainment2" tvg-name="Aastha TV" group-title="Hindi Spiritual", Aastha TV
+#EXTINF:-1 tvg-id="Spiritual3" tvg-name="Aastha TV" group-title="Spiritual", Aastha TV
 https://www.aasthatv.tv/
+
