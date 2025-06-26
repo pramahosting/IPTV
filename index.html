@@ -1,125 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PRAMA IPTV PLAYLIST</title>
-<style>
-  /* Your existing styles here */
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRAMA IPTV PLAYLIST</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100%; overflow: hidden;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    .main {
+      display: flex;
+      flex-direction: row;
+      height: calc(100% - 72px);
+    }
+    .sidebar {
+      width: 220px;
+      background: #ecf0f1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-top: 1rem;
+    }
+    .channel {
+      cursor: pointer;
+      padding: 0.5rem;
+      background: #fff;
+      margin: 0.3rem 0;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+    .channel:hover {
+      background: #d0e7ff;
+    }
+    .player {
+      flex: 1;
+      padding: 1rem;
+      background: #bdc3c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      background: white;
+      border: none;
+      border-radius: 8px;
+      flex: 1;
+    }
+    #search {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .loading {
+      font-size: 1rem;
+      color: #2c3e50;
+      margin: 0.5rem auto;
+      display: none;
+    }
+    #overlay-blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0);
+      display: none;
+    }
+    #abzy-tooltip {
+      margin-top: 8px; 
+      font-size: 0.9rem; 
+      color: #444; 
+      background: #f0f4f8; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      padding: 6px 10px;
+      max-width: 500px;
+      text-align: center;
+      user-select: none;
+      font-style: italic;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        padding: 0.5rem;
+      }
+      .player {
+        padding: 0.5rem;
+      }
+      #abzy-tooltip {
+        max-width: 100%;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>PRAMA IPTV PLAYLIST</header>
-<div class="main">
-  <div class="sidebar">
-    <input type="text" id="search" placeholder="Search channels..." />
-    <div id="Entertainment"><h2>🎨 Entertainment</h2><div class="list"></div></div>
-    <div id="News"><h2>📰 News</h2><div class="list"></div></div>
-    <div id="Spiritual"><h2>🕉️ Spiritual</h2><div class="list"></div></div>
+  <header>PRAMA IPTV PLAYLIST</header>
+  <div class="main">
+    <div class="sidebar">
+      <input type="text" id="search" placeholder="Search channels..." />
+      <div id="Entertainment">
+        <h2>🎨 Entertainment</h2>
+        <div class="list"></div>
+      </div>
+      <div id="News">
+        <h2>📰 News</h2>
+        <div class="list"></div>
+      </div>
+      <div id="Spiritual">
+        <h2>🕉️ Spiritual</h2>
+        <div class="list"></div>
+      </div>
+    </div>
+    <div class="player">
+      <div id="playerTitle" class="loading" style="display:block">Select a channel to view</div>
+      <div id="iframe-loading-msg" class="loading">Loading channel...</div>
+      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      <div id="abzy-tooltip">
+        Tip: To watch YouTube videos inside ABZY without issues, right-click the video link and select <em>'Open in new tab'</em>.
+      </div>
+      <div id="overlay-blocker"></div>
+    </div>
   </div>
-  <div class="player">
-    <div id="playerTitle" class="loading" style="display:block">Select a channel to view</div>
-    <div id="iframe-loading-msg" class="loading">Loading channel...</div>
-    <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-    <div id="overlay-blocker"></div>
-  </div>
-</div>
 
-<script>
-const playlist = [
-  { name: "YoMovies", url: "https://yomovies.design/" },
-  { name: "PlayDesi", url: "https://playdesi.info/" },
-  { name: "Abzy TV", url: "https://abzy.com" },
-  { name: "Geo TV", url: "https://www.harpalgeo.tv/" },
-  { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
-  { name: "Hum TV", url: "https://hum.tv/" },
-  { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
-  { name: "Dunya News", url: "https://dunyanews.tv/live/" },
-  { name: "Geo News", url: "https://live.geo.tv/" },
-  { name: "Aastha TV", url: "https://www.aasthatv.tv/" },
-  { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi" }
-];
+  <script>
+    const playlist = [
+      { name: "YoMovies", url: "https://yomovies.design/" },
+      { name: "PlayDesi", url: "https://playdesi.info/" },
+      { name: "Abzy TV", url: "https://abzy.com" },
+      { name: "Geo TV", url: "https://www.harpalgeo.tv/" },
+      { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
+      { name: "Hum TV", url: "https://hum.tv/" },
+      { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
+      { name: "Dunya News", url: "https://dunyanews.tv/live/" },
+      { name: "Geo News", url: "https://live.geo.tv/" },
+      { name: "Aastha TV", url: "https://www.aasthatv.tv/" },
+      { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi" }
+    ];
 
-const keywords = {
-  Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "einthusan"],
-  News: ["news", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
-  Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
-};
+    const keywords = {
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "einthusan"],
+      News: ["news", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
+      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
+    };
 
-const groups = {
-  Entertainment: document.querySelector("#Entertainment .list"),
-  News: document.querySelector("#News .list"),
-  Spiritual: document.querySelector("#Spiritual .list")
-};
+    const groups = {
+      Entertainment: document.querySelector("#Entertainment .list"),
+      News: document.querySelector("#News .list"),
+      Spiritual: document.querySelector("#Spiritual .list")
+    };
 
-function classify(name) {
-  const nameLC = name.toLowerCase();
-  for (const [group, keys] of Object.entries(keywords)) {
-    if (keys.some(k => nameLC.includes(k))) return group;
-  }
-  return "Entertainment";
-}
+    function classify(name) {
+      const nameLC = name.toLowerCase();
+      for (const [group, keys] of Object.entries(keywords)) {
+        if (keys.some((k) => nameLC.includes(k))) return group;
+      }
+      return "Entertainment";
+    }
 
-function renderChannels(channels) {
-  Object.values(groups).forEach(div => div.innerHTML = "");
-  channels.forEach(({ name, url }) => {
-    const group = classify(name);
-    const el = document.createElement("div");
-    el.className = "channel";
-    el.textContent = name;
-    el.dataset.name = name;
-    el.dataset.url = url;
-    el.addEventListener("click", () => playChannel(name, url));
-    groups[group]?.appendChild(el);
-  });
+    function renderChannels(channels) {
+      Object.values(groups).forEach(div => div.innerHTML = "");
+      channels.forEach(({ name, url }) => {
+        const group = classify(name);
+        const el = document.createElement("div");
+        el.className = "channel";
+        el.textContent = name;
+        el.dataset.name = name;
+        el.dataset.url = url;
+        el.addEventListener("click", () => playChannel(name, url));
+        groups[group]?.appendChild(el);
+      });
 
-  document.getElementById("search").addEventListener("input", (e) => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll(".channel").forEach(c => {
-      c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
-    });
-  });
-}
+      document.getElementById("search").addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll(".channel").forEach((c) => {
+          c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
+        });
+      });
+    }
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  const loadingMsg = document.getElementById("iframe-loading-msg");
-  const nameLC = name.toLowerCase();
+    let lastClicked = 0;
 
-  title.textContent = `Now Viewing: ${name}`;
+    function playChannel(name, url) {
+      const now = Date.now();
+      if (now - lastClicked < 1000) return;
+      lastClicked = now;
 
-  // Open these in new tab due to iframe restrictions
-  const newTabOnly = ["yomovies", "einthusan"];
-  if (newTabOnly.some(sub => nameLC.includes(sub))) {
-    window.open(url, "_blank");
-    frame.srcdoc = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>${name} is Playing in Another Tab</strong>
-      </div>`;
-    return;
-  }
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      const overlay = document.getElementById("overlay-blocker");
+      const loadingMsg = document.getElementById("iframe-loading-msg");
+      const nameLC = name.toLowerCase();
+      const currentURL = frame.getAttribute("src");
 
-  // For ABZY TV, load normally, but YouTube links inside iframe will open in new tab (no direct control possible cross-origin)
-  frame.removeAttribute("srcdoc");
-  loadingMsg.style.display = "block";
-  frame.onload = () => {
-    loadingMsg.style.display = "none";
-  };
-  frame.src = url;
-}
+      if (currentURL === url) return;
 
-// Just a reminder for YouTube links inside ABZY:
-const playerTitle = document.getElementById("playerTitle");
-playerTitle.insertAdjacentHTML('afterend', `
-  <div style="font-size:0.9rem; color:#666; margin: 0.5rem 1rem;">
-    Tip: To watch YouTube videos inside ABZY without issues, right-click the video link and select 'Open in new tab'.
-  </div>
-`);
+      title.textContent = `Now Viewing: ${name}`;
 
-renderChannels(playlist);
-</script>
+      const newTabOnly = ["yomovies", "einthusan"];
+
+      if (newTabOnly.some(sub => nameLC.includes(sub))) {
+        const tab = window.open(url, "_blank");
+        frame.srcdoc = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+            <strong>${name} is Playing in Another Tab</strong>
+          </div>
+        `;
+        const checkClosed = setInterval(() => {
+          if (tab.closed) {
+            clearInterval(checkClosed);
+            frame.removeAttribute("srcdoc");
+            frame.src = "";
+            title.textContent = "Select a channel to view";
+          }
+        }, 1000);
+        return;
+      }
+
+      frame.removeAttribute("srcdoc");
+      frame.src = "";
+      loadingMsg.style.display = "block";
+      frame.onload = () => {
+        loadingMsg.style.display = "none";
+      };
+
+      if (nameLC.includes("playdesi")) {
+        overlay.style.display = "block";
+        overlay.onclick = () => overlay.style.display = "none";
+      } else {
+        overlay.style.display = "none";
+      }
+
+      frame.src = url;
+    }
+
+    renderChannels(playlist);
+  </script>
 </body>
 </html>
+
 
 
