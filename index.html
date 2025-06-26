@@ -1,16 +1,14 @@
-latest html page is this: <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PRAMA IPTV PLAYLIST</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: Arial, sans-serif;
-      height: 100%;
-      overflow: hidden;
+      height: 100%; overflow: hidden;
     }
     header {
       background-color: #2c3e50;
@@ -78,7 +76,7 @@ latest html page is this: <!DOCTYPE html>
   <header>PRAMA IPTV PLAYLIST</header>
   <div class="main">
     <div class="sidebar">
-      <input type="text" id="search" placeholder="Search channels...">
+      <input type="text" id="search" placeholder="Search channels..." />
       <div id="Entertainment">
         <h2>🎨 Entertainment</h2>
         <div class="list"></div>
@@ -94,7 +92,11 @@ latest html page is this: <!DOCTYPE html>
     </div>
     <div class="player">
       <div id="playerTitle" class="loading">Select a channel to view</div>
-      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      <iframe
+        id="channel-frame"
+        allowfullscreen
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+      ></iframe>
     </div>
   </div>
 
@@ -108,7 +110,7 @@ latest html page is this: <!DOCTYPE html>
       { name: "Hum TV", url: "https://hum.tv/" },
       { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
       { name: "Times Now", url: "https://www.timesnownews.com/live-tv" },
-      { name: "Aaj Tak", url: "https://www.aajtak.in" },
+      { name: "Aaj Tak", url: "https://www.aajtak.in/livetv" },
       { name: "ABP News", url: "https://www.abplive.com/" },
       { name: "Dunya News", url: "https://dunyanews.tv/live/" },
       { name: "Geo News", url: "https://live.geo.tv/" },
@@ -116,68 +118,97 @@ latest html page is this: <!DOCTYPE html>
     ];
 
     const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
-      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "yupp", "Tims Now"],
+      Entertainment: [
+        "movie",
+        "drama",
+        "desi",
+        "geo tv",
+        "zindagi",
+        "hum",
+        "abzy",
+        "playdesi",
+        "yupp"
+      ],
+      News: [
+        "news",
+        "ndtv",
+        "aajtak",
+        "abp",
+        "al jazeera",
+        "geo news",
+        "dunya",
+        "times now"
+      ],
       Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
 
     const groups = {
-      Entertainment: document.querySelector('#Entertainment .list'),
-      News: document.querySelector('#News .list'),
-      Spiritual: document.querySelector('#Spiritual .list')
+      Entertainment: document.querySelector("#Entertainment .list"),
+      News: document.querySelector("#News .list"),
+      Spiritual: document.querySelector("#Spiritual .list")
     };
 
     function classify(name) {
       const nameLC = name.toLowerCase();
       for (const [group, keys] of Object.entries(keywords)) {
-        if (keys.some(k => nameLC.includes(k))) return group;
+        if (keys.some((k) => nameLC.includes(k))) return group;
       }
-      return 'Entertainment';
+      return "Entertainment";
     }
 
     function renderChannels(channels) {
-      Object.values(groups).forEach(div => div.innerHTML = '');
+      Object.values(groups).forEach((div) => (div.innerHTML = ""));
       channels.forEach(({ name, url }) => {
         const group = classify(name);
-        const el = document.createElement('div');
-        el.className = 'channel';
+        const el = document.createElement("div");
+        el.className = "channel";
         el.textContent = name;
         el.dataset.name = name;
         el.dataset.url = url;
-        el.addEventListener('click', () => playChannel(name, url));
+        el.addEventListener("click", () => playChannel(name, url));
         groups[group]?.appendChild(el);
       });
 
-      document.getElementById('search').addEventListener('input', (e) => {
+      document.getElementById("search").addEventListener("input", (e) => {
         const term = e.target.value.toLowerCase();
-        document.querySelectorAll('.channel').forEach(c => {
-          c.style.display = c.dataset.name.toLowerCase().includes(term) ? '' : 'none';
+        document.querySelectorAll(".channel").forEach((c) => {
+          c.style.display = c.dataset.name.toLowerCase().includes(term)
+            ? ""
+            : "none";
         });
       });
     }
 
     function blockUnwantedPopups() {
       const originalOpen = window.open;
-      window.open = function(url, name, specs) {
-        if (url.includes('starscopsinsider.com')) {
+      window.open = function (url, name, specs) {
+        if (url.includes("starscopsinsider.com")) {
           return originalOpen.call(window, url, name, specs);
         } else {
-          console.warn('Blocked popup:', url);
+          console.warn("Blocked popup:", url);
           return null;
         }
       };
     }
 
     function playChannel(name, url) {
-      const frame = document.getElementById('channel-frame');
-      const title = document.getElementById('playerTitle');
-      frame.src = url;
-      title.textContent = Now Viewing: ${name};
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      title.textContent = `Now Viewing: ${name}`;
+
+      if (name.toLowerCase().includes("playdesi")) {
+        blockUnwantedPopups();
+        frame.src = url;
+      } else if (name.toLowerCase().includes("yomovies")) {
+        window.open(url, "_blank");
+      } else {
+        frame.src = url;
+      }
     }
 
-    blockUnwantedPopups();
     renderChannels(playlist);
   </script>
 </body>
 </html>
+
 
