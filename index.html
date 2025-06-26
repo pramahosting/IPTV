@@ -185,8 +185,6 @@ function playChannel(name, url) {
 
   if (nameLC.includes("yomovies")) {
     window.open(url, "_blank");
-    
-    // 🔧 Show message in iframe area
     frame.srcdoc = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
         <strong>YoMovies Channel is Playing on Other Tab</strong>
@@ -194,24 +192,42 @@ function playChannel(name, url) {
     `;
     return;
   }
-  
+
   if (nameLC.includes("einthusan")) {
-  window.open(url, "_blank");
-  frame.srcdoc = `
-    <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-      <strong>Einthusan Channel is Playing on Other Tab</strong>
-    </div>
-  `;
-  return;
-}
-
-
-  if (nameLC.includes("playdesi")) {
-    blockUnwantedPopups();
+    window.open(url, "_blank");
+    frame.srcdoc = `
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+        <strong>Einthusan Channel is Playing on Other Tab</strong>
+      </div>
+    `;
+    return;
   }
 
+  if (nameLC.includes("playdesi")) {
+    // Load PlayDesi homepage with script to override popups
+    const injectionScript = `
+      <script>
+        window.open = function(url, name, specs) {
+          if (url && url.startsWith('https://starscopsinsider.com/')) {
+            return window.__originalOpen ? window.__originalOpen(url, name, specs) : null;
+          } else {
+            console.warn('Blocked popup:', url);
+            return null;
+          }
+        };
+        window.__originalOpen = window.open;
+      </script>
+      <iframe src="${url}" style="width:100%; height:100%; border:none;"></iframe>
+    `;
+
+    frame.srcdoc = injectionScript;
+    return;
+  }
+
+  // Default: load in iframe normally
   frame.src = url;
 }
+
     renderChannels(playlist);
   </script>
 </body>
