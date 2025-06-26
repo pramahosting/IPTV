@@ -49,6 +49,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      position: relative;
     }
     iframe {
       width: 100%;
@@ -69,6 +70,16 @@
       font-size: 1.2rem;
       color: #2c3e50;
       margin-bottom: 0.5rem;
+    }
+    #overlay-blocker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0);
+      display: none;
     }
   </style>
 </head>
@@ -97,6 +108,7 @@
         allowfullscreen
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
       ></iframe>
+      <div id="overlay-blocker"></div>
     </div>
   </div>
 
@@ -116,8 +128,8 @@
     ];
 
     const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
-      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "einthusan"],
+      News: ["news", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
       Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
 
@@ -130,7 +142,7 @@
     function classify(name) {
       const nameLC = name.toLowerCase();
       for (const [group, keys] of Object.entries(keywords)) {
-        if (keys.some(k => nameLC.includes(k))) return group;
+        if (keys.some((k) => nameLC.includes(k))) return group;
       }
       return "Entertainment";
     }
@@ -150,68 +162,57 @@
 
       document.getElementById("search").addEventListener("input", (e) => {
         const term = e.target.value.toLowerCase();
-        document.querySelectorAll(".channel").forEach(c => {
+        document.querySelectorAll(".channel").forEach((c) => {
           c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
         });
       });
     }
 
-    function blockUnwantedPopups() {
-      const originalOpen = window.open;
-      window.open = function (url, name, specs) {
-        if (typeof url === "string" && url.startsWith("https://starscopsinsider.com/")) {
-          return originalOpen.call(window, url, name, specs);
-        } else {
-          console.warn("Blocked popup:", url);
-          return null;
-        }
-      };
+    function playChannel(name, url) {
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      const overlay = document.getElementById("overlay-blocker");
+      const nameLC = name.toLowerCase();
+
+      frame.removeAttribute("srcdoc");
+      frame.src = "";
+      overlay.style.display = "none";
+
+      title.textContent = `Now Viewing: ${name}`;
+
+      if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
+        const tab = window.open(url, "_blank");
+
+        frame.srcdoc = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+            <strong>${name} is Playing on Another Tab</strong>
+          </div>
+        `;
+
+        const checkClosed = setInterval(() => {
+          if (tab.closed) {
+            clearInterval(checkClosed);
+            frame.removeAttribute("srcdoc");
+            frame.src = "";
+            title.textContent = "Select a channel to view";
+          }
+        }, 1000);
+        return;
+      }
+
+      if (nameLC.includes("playdesi")) {
+        overlay.style.display = "block";
+        overlay.onclick = () => {
+          overlay.style.display = "none"; // Allow click through after 1st click
+        };
+      }
+
+      frame.src = url;
     }
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  const overlay = document.getElementById("overlay-blocker");
-  title.textContent = `Now Viewing: ${name}`;
-  const nameLC = name.toLowerCase();
-
-  frame.removeAttribute("srcdoc");
-  frame.src = "";
-
-  if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
-    const tab = window.open(url, "_blank");
-    frame.srcdoc = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>${name} is Playing on Another Tab</strong>
-      </div>
-    `;
-    const checkClosed = setInterval(() => {
-      if (tab.closed) {
-        clearInterval(checkClosed);
-        frame.removeAttribute("srcdoc");
-        frame.src = "";
-        title.textContent = "Select a channel to view";
-      }
-    }, 1000);
-    return;
-  }
-
-  if (nameLC.includes("playdesi")) {
-    // Show overlay to trap unwanted popups
-    overlay.style.display = "block";
-
-    // Hide overlay after first click (suppress initial popup)
-    overlay.onclick = () => {
-      overlay.style.display = "none";
-    };
-  } else {
-    overlay.style.display = "none";
-  }
-
-  frame.src = url;
-}
     renderChannels(playlist);
   </script>
 </body>
 </html>
+
 
