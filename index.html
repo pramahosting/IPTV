@@ -184,8 +184,9 @@
 
       title.textContent = `Now Viewing: ${name}`;
 
-      const forceNewTab = ["yomovies", "einthusan", "abzy"];
-      if (forceNewTab.some(sub => nameLC.includes(sub))) {
+      const newTabOnly = ["yomovies", "einthusan"];
+
+      if (newTabOnly.some(sub => nameLC.includes(sub))) {
         const tab = window.open(url, "_blank");
         frame.srcdoc = `
           <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
@@ -224,5 +225,3 @@
   </script>
 </body>
 </html>
-
-
