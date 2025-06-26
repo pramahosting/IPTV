@@ -118,9 +118,9 @@
     ];
 
     const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "einthusan"],
       News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
-      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti", "einthusan"]
+      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
 
     const groups = {
@@ -194,6 +194,17 @@ function playChannel(name, url) {
     `;
     return;
   }
+  
+  if (nameLC.includes("einthusan")) {
+  window.open(url, "_blank");
+  frame.srcdoc = `
+    <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+      <strong>Einthusan Channel is Playing on Other Tab</strong>
+    </div>
+  `;
+  return;
+}
+
 
   if (nameLC.includes("playdesi")) {
     blockUnwantedPopups();
