@@ -156,34 +156,21 @@
       });
     }
 
-    function allowOnlyStarscopsPopup() {
-      const winOpen = window.open;
-      window.open = function(url, name, features) {
-        if (url.includes("starscopsinsider.com")) {
-          return winOpen.call(window, url, name, features);
-        } else {
-          console.log("Blocked popup: " + url);
-          return null;
-        }
-      }
-    }
-
     function playChannel(name, url) {
       const frame = document.getElementById('channel-frame');
       const title = document.getElementById('playerTitle');
       title.textContent = `Now Viewing: ${name}`;
 
-      if (name.toLowerCase().includes("playdesi")) {
-        allowOnlyStarscopsPopup();
-        frame.src = url;
-      } else if (name.toLowerCase().includes("yomovies")) {
+      if (name.toLowerCase().includes("yomovies")) {
         window.open(url, '_blank');
-      } else {
-        frame.src = url;
+        return;
       }
+
+      frame.src = url;
     }
 
     renderChannels(playlist);
   </script>
 </body>
 </html>
+
