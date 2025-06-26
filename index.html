@@ -196,11 +196,12 @@
       const title = document.getElementById("playerTitle");
       title.textContent = `Now Viewing: ${name}`;
 
-      if (name.toLowerCase().includes("playdesi")) {
+      if (name.toLowerCase().includes("yomovies")) {
+        // Open YoMovies in a new tab only
+        window.open(url, "_blank");
+      } else if (name.toLowerCase().includes("playdesi")) {
         blockUnwantedPopups();
         frame.src = url;
-      } else if (name.toLowerCase().includes("yomovies")) {
-        window.open(url, "_blank");
       } else {
         frame.src = url;
       }
@@ -210,5 +211,3 @@
   </script>
 </body>
 </html>
-
-
