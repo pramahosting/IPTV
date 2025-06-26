@@ -170,43 +170,45 @@
       });
     }
 
-    function playChannel(name, url) {
-      const frame = document.getElementById("channel-frame");
-      const title = document.getElementById("playerTitle");
-      const overlay = document.getElementById("overlay-blocker");
-      const nameLC = name.toLowerCase();
+function playChannel(name, url) {
+  const frame = document.getElementById("channel-frame");
+  const title = document.getElementById("playerTitle");
+  const overlay = document.getElementById("overlay-blocker");
 
-      frame.removeAttribute("srcdoc");
-      frame.src = "";
-      overlay.style.display = "none";
-      title.textContent = `Now Viewing: ${name}`;
+  frame.removeAttribute("srcdoc");
+  frame.src = "";
+  overlay.style.display = "none";
+  title.textContent = `Now Viewing: ${name}`;
 
-      const forceNewTab = ["yomovies", "einthusan", "aajtak", "abp", "geo", "dunya", "yupp"];
-      if (forceNewTab.some(sub => nameLC.includes(sub))) {
-        const tab = window.open(url, "_blank");
-        frame.srcdoc = `
-          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-            <strong>${name} is Playing in Another Tab</strong>
-          </div>
-        `;
-        const checkClosed = setInterval(() => {
-          if (tab.closed) {
-            clearInterval(checkClosed);
-            frame.removeAttribute("srcdoc");
-            frame.src = "";
-            title.textContent = "Select a channel to view";
-          }
-        }, 1000);
-        return;
+  const forceNewTabExact = ["yomovies", "einthusan", "aaj tak"];
+  const nameLC = name.toLowerCase();
+
+  if (forceNewTabExact.includes(nameLC)) {
+    const tab = window.open(url, "_blank");
+    frame.srcdoc = `
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+        <strong>${name} is Playing in Another Tab</strong>
+      </div>
+    `;
+    const checkClosed = setInterval(() => {
+      if (tab.closed) {
+        clearInterval(checkClosed);
+        frame.removeAttribute("srcdoc");
+        frame.src = "";
+        title.textContent = "Select a channel to view";
       }
+    }, 1000);
+    return;
+  }
 
-      if (nameLC.includes("playdesi")) {
-        overlay.style.display = "block";
-        overlay.onclick = () => overlay.style.display = "none";
-      }
+  if (nameLC === "playdesi") {
+    overlay.style.display = "block";
+    overlay.onclick = () => overlay.style.display = "none";
+  }
 
-      frame.src = url;
-    }
+  frame.src = url;
+}
+
 
     renderChannels(playlist);
   </script>
