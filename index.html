@@ -171,40 +171,48 @@ function blockUnwantedPopups() {
   };
 }
 
-
 function playChannel(name, url) {
   const frame = document.getElementById("channel-frame");
   const title = document.getElementById("playerTitle");
   title.textContent = `Now Viewing: ${name}`;
-
   const nameLC = name.toLowerCase();
 
-  if (nameLC.includes("yomovies")) {
-    window.open(url, "_blank");
+  // Always clear existing content
+  frame.removeAttribute("srcdoc");
+  frame.src = "";
+
+  // Handle YoMovies or Einthusan in new tab
+  if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
+    const newTab = window.open(url, "_blank");
+
     frame.srcdoc = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>YoMovies Channel is Playing on Other Tab</strong>
+        <strong>${name} is Playing on Another Tab</strong>
       </div>
     `;
+
+    // Start interval to monitor tab close
+    const checkClosed = setInterval(() => {
+      if (newTab.closed) {
+        clearInterval(checkClosed);
+        frame.removeAttribute("srcdoc");
+        frame.src = "";
+        title.textContent = "Select a channel to view";
+      }
+    }, 1000);
+
     return;
   }
 
-  if (nameLC.includes("einthusan")) {
-    window.open(url, "_blank");
-    frame.srcdoc = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>Einthusan Channel is Playing on Other Tab</strong>
-      </div>
-    `;
-    return;
-  }
-
+  // If PlayDesi, apply popup blocker
   if (nameLC.includes("playdesi")) {
-    blockUnwantedPopups(); // Just before loading PlayDesi
+    blockUnwantedPopups();
   }
 
-  frame.src = url; // Load all others normally
+  // All other channels load normally in iframe
+  frame.src = url;
 }
+
     renderChannels(playlist);
   </script>
 </body>
