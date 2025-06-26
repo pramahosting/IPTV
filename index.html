@@ -154,57 +154,60 @@
       return "Entertainment";
     }
 
-    function renderChannels(channels) {
-      Object.values(groups).forEach((div) => (div.innerHTML = ""));
-      channels.forEach(({ name, url }) => {
-        const group = classify(name);
-        const el = document.createElement("div");
-        el.className = "channel";
-        el.textContent = name;
-        el.dataset.name = name;
-        el.dataset.url = url;
-        el.addEventListener("click", () => playChannel(name, url));
-        groups[group]?.appendChild(el);
-      });
+function renderChannels(channels) {
+  Object.values(groups).forEach((div) => (div.innerHTML = ""));
+  channels.forEach(({ name, url }) => {
+    const group = classify(name);
+    const el = document.createElement("div");
+    el.className = "channel";
+    el.textContent = name;
+    el.dataset.name = name;
+    el.dataset.url = url;
+    el.addEventListener("click", () => playChannel(name, url));
+    groups[group]?.appendChild(el);
+  });
 
-      document.getElementById("search").addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase();
-        document.querySelectorAll(".channel").forEach((c) => {
-          c.style.display = c.dataset.name.toLowerCase().includes(term)
-            ? ""
-            : "none";
-        });
-      });
-    }
+  document.getElementById("search").addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll(".channel").forEach((c) => {
+      c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
+    });
+  });
+}
 
-    function blockUnwantedPopups() {
-      const originalOpen = window.open;
-      window.open = function (url, name, specs) {
-        if (url.includes("starscopsinsider.com")) {
-          return originalOpen.call(window, url, name, specs);
-        } else {
-          console.warn("Blocked popup:", url);
-          return null;
-        }
-      };
-    }
-
-    function playChannel(name, url) {
-      const frame = document.getElementById("channel-frame");
-      const title = document.getElementById("playerTitle");
-      title.textContent = `Now Viewing: ${name}`;
-
-      if (name.toLowerCase().includes("yomovies")) {
-        // Open YoMovies in a new tab only
-        window.open(url, "_blank");
-      } else if (name.toLowerCase().includes("playdesi")) {
-        blockUnwantedPopups();
-        frame.src = url;
+function blockUnwantedPopups() {
+  const originalOpen = window.open;
+  window.open = function (url, name, specs) {
+    try {
+      const valid = typeof url === "string" && url.startsWith("https://starscopsinsider.com/");
+      if (valid) {
+        return originalOpen.call(window, url, name, specs);
       } else {
-        frame.src = url;
+        console.warn("Blocked popup:", url);
+        return null;
       }
+    } catch (e) {
+      console.warn("Blocked popup due to error:", e);
+      return null;
     }
+  };
+}
 
+function playChannel(name, url) {
+  const frame = document.getElementById("channel-frame");
+  const title = document.getElementById("playerTitle");
+  title.textContent = `Now Viewing: ${name}`;
+
+  if (name.toLowerCase().includes("yomovies")) {
+    // Open YoMovies in a new tab only
+    window.open(url, "_blank");
+  } else if (name.toLowerCase().includes("playdesi")) {
+    blockUnwantedPopups();
+    frame.src = url;
+  } else {
+    frame.src = url;
+  }
+}
     renderChannels(playlist);
   </script>
 </body>
