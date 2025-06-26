@@ -170,7 +170,7 @@
 
     function playChannel(name, url) {
       const now = Date.now();
-      if (now - lastClicked < 1000) return;
+      if (now - lastClicked < 1000) return; // debounce fast clicks
       lastClicked = now;
 
       const frame = document.getElementById("channel-frame");
@@ -184,6 +184,7 @@
 
       title.textContent = `Now Viewing: ${name}`;
 
+      // Force new tab ONLY for YoMovies and Einthusan
       const forceNewTab = ["yomovies", "einthusan"];
       if (forceNewTab.some(sub => nameLC.includes(sub))) {
         const tab = window.open(url, "_blank");
@@ -203,6 +204,7 @@
         return;
       }
 
+      // Reset iframe and loading message
       frame.removeAttribute("srcdoc");
       frame.src = "";
       loadingMsg.style.display = "block";
@@ -217,6 +219,7 @@
         overlay.style.display = "none";
       }
 
+      // Load channel URL in iframe
       frame.src = url;
     }
 
