@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PRAMA IPTV PLAYLIST</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
+      height: 100%;
+      overflow: hidden;
     }
     header {
       background-color: #2c3e50;
@@ -20,12 +20,11 @@
       font-size: 1.5rem;
     }
     .main {
-      flex: 1;
       display: flex;
-      overflow: hidden;
+      height: calc(100% - 72px);
     }
     .sidebar {
-      width: 240px;
+      width: 220px;
       background: #ecf0f1;
       padding: 1rem;
       overflow-y: auto;
@@ -51,14 +50,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
     }
     iframe {
       width: 100%;
-      height: 600px;
+      height: 100%;
       background: white;
       border: none;
       border-radius: 8px;
+      flex: 1;
     }
     #search {
       width: 100%;
@@ -70,7 +70,7 @@
     .loading {
       font-size: 1.2rem;
       color: #2c3e50;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
@@ -94,7 +94,7 @@
     </div>
     <div class="player">
       <div id="playerTitle" class="loading">Select a channel to view</div>
-      <iframe id="channel-frame"></iframe>
+      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
     </div>
   </div>
 
@@ -106,8 +106,8 @@
       { name: "Geo TV", url: "https://www.harpalgeo.tv/" },
       { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
       { name: "Hum TV", url: "https://hum.tv/" },
-      { name: "YuppTV News", url: "https://www.yupptv.com/fast-tv" },
-      { name: "Al Jazeera", url: "https://live-hls-web-aje.getaj.net/AJE/01.m3u8" },
+      { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
+      { name: "Al Jazeera", url: "https://www.aljazeera.com/live/" },
       { name: "Aaj Tak", url: "https://www.aajtak.in/livetv" },
       { name: "ABP News", url: "https://www.abplive.com/" },
       { name: "Dunya News", url: "https://dunyanews.tv/live/" },
@@ -158,6 +158,18 @@
       });
     }
 
+    function blockUnwantedPopups() {
+      const originalOpen = window.open;
+      window.open = function(url, name, specs) {
+        if (url.includes('starscopsinsider.com')) {
+          return originalOpen.call(window, url, name, specs);
+        } else {
+          console.warn('Blocked popup:', url);
+          return null;
+        }
+      };
+    }
+
     function playChannel(name, url) {
       const frame = document.getElementById('channel-frame');
       const title = document.getElementById('playerTitle');
@@ -165,6 +177,7 @@
       title.textContent = `Now Viewing: ${name}`;
     }
 
+    blockUnwantedPopups();
     renderChannels(playlist);
   </script>
 </body>
