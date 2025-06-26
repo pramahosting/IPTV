@@ -94,7 +94,7 @@
     </div>
     <div class="player">
       <div id="playerTitle" class="loading">Select a channel to view</div>
-      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
   </div>
 
@@ -108,7 +108,7 @@
       { name: "Hum TV", url: "https://hum.tv/" },
       { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
       { name: "Times Now", url: "https://www.timesnownews.com/live-tv" },
-      { name: "Aaj Tak", url: "https://www.aajtak.in" },
+      { name: "Aaj Tak", url: "https://www.aajtak.in/livetv" },
       { name: "ABP News", url: "https://www.abplive.com/" },
       { name: "Dunya News", url: "https://dunyanews.tv/live/" },
       { name: "Geo News", url: "https://live.geo.tv/" },
@@ -116,8 +116,8 @@
     ];
 
     const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
-      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "yupp", "Tims Now"],
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "yupp"],
+      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now"],
       Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
 
@@ -156,26 +156,33 @@
       });
     }
 
-    function blockUnwantedPopups() {
-      const originalOpen = window.open;
-      window.open = function(url, name, specs) {
-        if (url.includes('starscopsinsider.com')) {
-          return originalOpen.call(window, url, name, specs);
+    function allowOnlyStarscopsPopup() {
+      const winOpen = window.open;
+      window.open = function(url, name, features) {
+        if (url.includes("starscopsinsider.com")) {
+          return winOpen.call(window, url, name, features);
         } else {
-          console.warn('Blocked popup:', url);
+          console.log("Blocked popup: " + url);
           return null;
         }
-      };
+      }
     }
 
     function playChannel(name, url) {
       const frame = document.getElementById('channel-frame');
       const title = document.getElementById('playerTitle');
-      frame.src = url;
       title.textContent = `Now Viewing: ${name}`;
+
+      if (name.toLowerCase().includes("playdesi")) {
+        allowOnlyStarscopsPopup();
+        frame.src = url;
+      } else if (name.toLowerCase().includes("yomovies")) {
+        window.open(url, '_blank');
+      } else {
+        frame.src = url;
+      }
     }
 
-    blockUnwantedPopups();
     renderChannels(playlist);
   </script>
 </body>
