@@ -6,9 +6,11 @@
   <title>PRAMA IPTV PLAYLIST</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      height: 100%; overflow: hidden;
+      height: 100%;
+      overflow: hidden;
     }
     header {
       background-color: #2c3e50;
@@ -109,34 +111,14 @@
       { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
       { name: "Hum TV", url: "https://hum.tv/" },
       { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
-      { name: "ABP News", url: "https://www.abplive.com/" },
       { name: "Dunya News", url: "https://dunyanews.tv/live/" },
       { name: "Geo News", url: "https://live.geo.tv/" },
       { name: "Aastha TV", url: "https://www.aasthatv.tv/" }
     ];
 
     const keywords = {
-      Entertainment: [
-        "movie",
-        "drama",
-        "desi",
-        "geo tv",
-        "zindagi",
-        "hum",
-        "abzy",
-        "playdesi"
-      ],
-      News: [
-        "news",
-        "ndtv",
-        "aajtak",
-        "abp",
-        "al jazeera",
-        "geo news",
-        "dunya",
-        "times now",
-        "yupp"
-      ],
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
+      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
       Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
 
@@ -149,65 +131,69 @@
     function classify(name) {
       const nameLC = name.toLowerCase();
       for (const [group, keys] of Object.entries(keywords)) {
-        if (keys.some((k) => nameLC.includes(k))) return group;
+        if (keys.some(k => nameLC.includes(k))) return group;
       }
       return "Entertainment";
     }
 
-function renderChannels(channels) {
-  Object.values(groups).forEach((div) => (div.innerHTML = ""));
-  channels.forEach(({ name, url }) => {
-    const group = classify(name);
-    const el = document.createElement("div");
-    el.className = "channel";
-    el.textContent = name;
-    el.dataset.name = name;
-    el.dataset.url = url;
-    el.addEventListener("click", () => playChannel(name, url));
-    groups[group]?.appendChild(el);
-  });
+    function renderChannels(channels) {
+      Object.values(groups).forEach((div) => (div.innerHTML = ""));
+      channels.forEach(({ name, url }) => {
+        const group = classify(name);
+        const el = document.createElement("div");
+        el.className = "channel";
+        el.textContent = name;
+        el.dataset.name = name;
+        el.dataset.url = url;
+        el.addEventListener("click", () => playChannel(name, url));
+        groups[group]?.appendChild(el);
+      });
 
-  document.getElementById("search").addEventListener("input", (e) => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll(".channel").forEach((c) => {
-      c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
-    });
-  });
-}
-
-function blockUnwantedPopups() {
-  const originalOpen = window.open;
-  window.open = function (url, name, specs) {
-    try {
-      const valid = typeof url === "string" && url.startsWith("https://starscopsinsider.com/");
-      if (valid) {
-        return originalOpen.call(window, url, name, specs);
-      } else {
-        console.warn("Blocked popup:", url);
-        return null;
-      }
-    } catch (e) {
-      console.warn("Blocked popup due to error:", e);
-      return null;
+      document.getElementById("search").addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll(".channel").forEach((c) => {
+          c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
+        });
+      });
     }
-  };
-}
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  title.textContent = `Now Viewing: ${name}`;
+    function blockUnwantedPopups() {
+      const originalOpen = window.open;
+      window.open = function (url, name, specs) {
+        try {
+          const valid = typeof url === "string" && url.startsWith("https://starscopsinsider.com/");
+          if (valid) {
+            return originalOpen.call(window, url, name, specs);
+          } else {
+            console.warn("Blocked popup:", url);
+            return null;
+          }
+        } catch (e) {
+          console.warn("Blocked popup due to error:", e);
+          return null;
+        }
+      };
+    }
 
-  if (name.toLowerCase().includes("yomovies")) {
-    // Open YoMovies in a new tab only
-    window.open(url, "_blank");
-  } else if (name.toLowerCase().includes("playdesi")) {
-    blockUnwantedPopups();
-    frame.src = url;
-  } else {
-    frame.src = url;
-  }
-}
+    function playChannel(name, url) {
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      title.textContent = `Now Viewing: ${name}`;
+
+      const nameLC = name.toLowerCase();
+
+      if (nameLC.includes("yomovies")) {
+        window.open(url, "_blank");
+        return;
+      }
+
+      if (nameLC.includes("playdesi")) {
+        blockUnwantedPopups();
+      }
+
+      frame.src = url;
+    }
+
     renderChannels(playlist);
   </script>
 </body>
