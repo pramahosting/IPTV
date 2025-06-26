@@ -6,11 +6,9 @@
   <title>PRAMA IPTV PLAYLIST</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: Arial, sans-serif;
-      height: 100%;
-      overflow: hidden;
+      height: 100%; overflow: hidden;
     }
     header {
       background-color: #2c3e50;
@@ -69,9 +67,10 @@
       border-radius: 4px;
     }
     .loading {
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: #2c3e50;
-      margin-bottom: 0.5rem;
+      margin: 0.5rem auto;
+      display: none;
     }
     #overlay-blocker {
       position: absolute;
@@ -104,12 +103,9 @@
       </div>
     </div>
     <div class="player">
-      <div id="playerTitle" class="loading">Select a channel to view</div>
-      <iframe
-        id="channel-frame"
-        allowfullscreen
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-      ></iframe>
+      <div id="playerTitle" class="loading" style="display:block">Select a channel to view</div>
+      <div id="iframe-loading-msg" class="loading">Loading channel...</div>
+      <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
       <div id="overlay-blocker"></div>
     </div>
   </div>
@@ -149,41 +145,82 @@
       return "Entertainment";
     }
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  const currentURL = frame.getAttribute("src");
+    function renderChannels(channels) {
+      Object.values(groups).forEach(div => div.innerHTML = "");
+      channels.forEach(({ name, url }) => {
+        const group = classify(name);
+        const el = document.createElement("div");
+        el.className = "channel";
+        el.textContent = name;
+        el.dataset.name = name;
+        el.dataset.url = url;
+        el.addEventListener("click", () => playChannel(name, url));
+        groups[group]?.appendChild(el);
+      });
 
-  title.textContent = `Now Viewing: ${name}`;
+      document.getElementById("search").addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll(".channel").forEach((c) => {
+          c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
+        });
+      });
+    }
 
-  if (currentURL === url) return; // ✅ Avoid reload if already selected
+    let lastClicked = 0;
 
-  // YoMovies and Einthusan open in new tab
-  if (["yomovies", "einthusan"].some(s => name.toLowerCase().includes(s))) {
-    const tab = window.open(url, "_blank");
-    frame.srcdoc = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>${name} is Playing in Another Tab</strong>
-      </div>
-    `;
-    const checkClosed = setInterval(() => {
-      if (tab.closed) {
-        clearInterval(checkClosed);
-        frame.removeAttribute("srcdoc");
-        frame.src = "";
-        title.textContent = "Select a channel to view";
+    function playChannel(name, url) {
+      const now = Date.now();
+      if (now - lastClicked < 1000) return;
+      lastClicked = now;
+
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      const overlay = document.getElementById("overlay-blocker");
+      const loadingMsg = document.getElementById("iframe-loading-msg");
+      const nameLC = name.toLowerCase();
+      const currentURL = frame.getAttribute("src");
+
+      if (currentURL === url) return;
+
+      title.textContent = `Now Viewing: ${name}`;
+
+      const forceNewTab = ["yomovies", "einthusan"];
+      if (forceNewTab.some(sub => nameLC.includes(sub))) {
+        const tab = window.open(url, "_blank");
+        frame.srcdoc = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+            <strong>${name} is Playing in Another Tab</strong>
+          </div>
+        `;
+        const checkClosed = setInterval(() => {
+          if (tab.closed) {
+            clearInterval(checkClosed);
+            frame.removeAttribute("srcdoc");
+            frame.src = "";
+            title.textContent = "Select a channel to view";
+          }
+        }, 1000);
+        return;
       }
-    }, 1000);
-    return;
-  }
 
-  frame.removeAttribute("srcdoc");
-  frame.src = url;
-}
+      frame.removeAttribute("srcdoc");
+      frame.src = "";
+      loadingMsg.style.display = "block";
+      frame.onload = () => {
+        loadingMsg.style.display = "none";
+      };
+
+      if (nameLC.includes("playdesi")) {
+        overlay.style.display = "block";
+        overlay.onclick = () => overlay.style.display = "none";
+      } else {
+        overlay.style.display = "none";
+      }
+
+      frame.src = url;
+    }
+
     renderChannels(playlist);
   </script>
 </body>
 </html>
-
-
-
