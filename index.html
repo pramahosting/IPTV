@@ -1,155 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PRAMA IPTV</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRAMA IPTV PLAYLIST</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f4f4f4;
       margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
       padding: 1rem;
-      max-width: 800px;
-      margin: auto;
+      text-align: center;
+      font-size: 1.5rem;
     }
-    h1 { text-align: center; margin-bottom: 1rem; }
-    h2 { margin-top: 2rem; color: #333; }
-    ul { list-style: none; padding: 0; }
-    li {
-      background: #fff;
-      padding: 0.75rem;
-      margin: 0.3rem 0;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    .main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 300px;
+      background: #ecf0f1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-top: 1rem;
+    }
+    .channel {
       cursor: pointer;
+      padding: 0.5rem;
+      background: #fff;
+      margin: 0.3rem 0;
+      border-radius: 5px;
+      transition: background 0.2s;
     }
-    li:hover { background: #e8f0fe; }
-    .hidden { display: none; }
-
-    #player-container {
-      display: none;
+    .channel:hover {
+      background: #d0e7ff;
+    }
+    .player {
+      flex: 1;
+      padding: 1rem;
+      background: #bdc3c7;
+      display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
     video {
       width: 100%;
-      max-width: 720px;
+      max-width: 800px;
       height: auto;
-      margin-top: 1rem;
-      border-radius: 12px;
       background: black;
+      border-radius: 8px;
     }
-    #back-button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+    #search {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-    #back-button:hover { background: #0056b3; }
+    .loading {
+      font-size: 1.2rem;
+      color: #2c3e50;
+    }
   </style>
 </head>
 <body>
-  <h1>📺 IPTV Playlist</h1>
-
-  <div id="channel-list-container">
-    <div id="Entertainment">
-      <h2>🎬 Entertainment</h2>
-      <ul></ul>
+  <header>PRAMA IPTV PLAYLIST</header>
+  <div class="main">
+    <div class="sidebar">
+      <input type="text" id="search" placeholder="Search channels...">
+      <div id="Entertainment">
+        <h2>🎨 Entertainment</h2>
+        <div class="list"></div>
+      </div>
+      <div id="News">
+        <h2>📰 News</h2>
+        <div class="list"></div>
+      </div>
+      <div id="Spiritual">
+        <h2>🕉️ Spiritual</h2>
+        <div class="list"></div>
+      </div>
     </div>
-    <div id="News">
-      <h2>📰 News</h2>
-      <ul></ul>
+    <div class="player">
+      <div id="playerTitle" class="loading">Select a channel to start playing</div>
+      <video id="video" controls></video>
     </div>
-    <div id="Spiritual">
-      <h2>🕉️ Spiritual</h2>
-      <ul></ul>
-    </div>
-  </div>
-
-  <div id="player-container">
-    <h2 id="channel-title"></h2>
-    <video id="video-player" controls autoplay></video>
-    <button id="back-button">🔙 Back to Channels</button>
   </div>
 
   <script>
-    const categories = {
-      Entertainment: ["movie", "drama", "desi", "bollywood", "colors", "zee", "sony", "star"],
-      News: ["news", "ndtv", "aajtak", "abp", "cnn", "bbc"],
-      Spiritual: ["spiritual", "satsang", "bhakti", "sadhna", "om", "ram", "krishna", "shiv", "shirdi"]
+    const playlistUrl = 'playlist_auto.m3u';
+
+    const groups = {
+      Entertainment: document.querySelector('#Entertainment .list'),
+      News: document.querySelector('#News .list'),
+      Spiritual: document.querySelector('#Spiritual .list')
     };
 
-    // Add your trusted IPTV domains here:
-    const trustedDomains = [
-      "example.com",
-      "trusted-iptv.net",
-      "cdn.provider.com",
-      // Add your own safe domains from your m3u URLs
-    ];
+    const keywords = {
+      Entertainment: ["movie", "drama", "desi", "geo", "zindagi", "hum", "abzy", "playdesi", "yomovie"],
+      News: ["news", "ndtv", "aajtak", "abp", "aljazeera", "geo", "dunya"],
+      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
+    };
 
-    function isUrlSafe(url) {
-      try {
-        const hostname = new URL(url).hostname.toLowerCase();
-        return trustedDomains.some(domain => hostname.endsWith(domain));
-      } catch {
-        return false;
+    function classify(name) {
+      const nameLC = name.toLowerCase();
+      for (const [cat, keys] of Object.entries(keywords)) {
+        if (keys.some(k => nameLC.includes(k))) return cat;
       }
+      return 'Entertainment';
     }
 
-    function classifyChannel(name) {
-      const lower = name.toLowerCase();
-      for (const [group, keywords] of Object.entries(categories)) {
-        if (keywords.some(word => lower.includes(word))) {
-          return group;
-        }
-      }
-      return "Entertainment"; // default fallback
-    }
-
-    fetch('playlist_auto.m3u')
-      .then(res => res.text())
-      .then(data => {
-        const lines = data.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].startsWith('#EXTINF')) {
-            const name = lines[i].split(',').pop().trim();
-            const url = lines[i + 1]?.trim();
-            if (url && url.startsWith('http') && isUrlSafe(url)) {
-              const group = classifyChannel(name);
-              const ul = document.querySelector(`#${group} ul`);
-              const li = document.createElement('li');
-              li.textContent = name;
-              li.addEventListener('click', () => playChannel(name, url));
-              ul.appendChild(li);
+    function loadPlaylist() {
+      fetch(playlistUrl)
+        .then(res => res.text())
+        .then(data => {
+          const lines = data.split('\n');
+          const channels = [];
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].startsWith('#EXTINF')) {
+              const name = lines[i].split(',').pop().trim();
+              const url = lines[i + 1]?.trim();
+              if (url && url.startsWith('http')) {
+                const group = classify(name);
+                channels.push({ name, url, group });
+              }
             }
           }
-        }
-      })
-      .catch(err => {
-        document.body.innerHTML = '<p>Failed to load playlist.</p>';
-        console.error(err);
-      });
-
-    function playChannel(name, url) {
-      document.getElementById('channel-list-container').style.display = 'none';
-      document.getElementById('player-container').style.display = 'flex';
-      document.getElementById('channel-title').textContent = name;
-      const video = document.getElementById('video-player');
-      video.src = url;
-      video.play();
+          renderChannels(channels);
+        });
     }
 
-    document.getElementById('back-button').addEventListener('click', () => {
-      const video = document.getElementById('video-player');
-      video.pause();
-      video.src = '';
-      document.getElementById('player-container').style.display = 'none';
-      document.getElementById('channel-list-container').style.display = 'block';
-    });
+    function renderChannels(channels) {
+      Object.values(groups).forEach(div => div.innerHTML = '');
+      channels.forEach(({ name, url, group }) => {
+        const el = document.createElement('div');
+        el.className = 'channel';
+        el.textContent = name;
+        el.dataset.name = name;
+        el.dataset.url = url;
+        el.addEventListener('click', () => playChannel(name, url));
+        groups[group]?.appendChild(el);
+      });
+
+      document.getElementById('search').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('.channel').forEach(c => {
+          c.style.display = c.dataset.name.toLowerCase().includes(term) ? '' : 'none';
+        });
+      });
+    }
+
+    function playChannel(name, url) {
+      const player = document.getElementById('video');
+      const title = document.getElementById('playerTitle');
+      player.src = url;
+      player.play();
+      title.textContent = `Now Playing: ${name}`;
+    }
+
+    loadPlaylist();
   </script>
 </body>
 </html>
+
 
