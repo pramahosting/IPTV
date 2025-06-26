@@ -2,69 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>IPTV Playlist Viewer</title>
+  <title>IPTV Playlist</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 2rem auto;
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
       padding: 1rem;
-      background-color: #f9f9f9;
+      max-width: 800px;
+      margin: auto;
     }
-    h1 { text-align: center; }
-    ul { list-style-type: none; padding: 0; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    h2 { margin-top: 2rem; color: #333; }
+    ul { list-style: none; padding: 0; }
     li {
       background: #fff;
-      margin: 0.5rem 0;
-      padding: 0.7rem;
+      padding: 0.75rem;
+      margin: 0.3rem 0;
       border-radius: 8px;
-      box-shadow: 0 0 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
-    a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
+    li:hover { background: #e8f0fe; }
+    .hidden { display: none; }
+
+    #player-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
     }
+    video {
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+      margin-top: 1rem;
+      border-radius: 12px;
+      background: black;
+    }
+    #back-button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #back-button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
   <h1>📺 IPTV Playlist</h1>
-  <ul id="channel-list">Loading channels...</ul>
+
+  <div id="channel-list-container">
+    <div id="Entertainment">
+      <h2>🎬 Entertainment</h2>
+      <ul></ul>
+    </div>
+    <div id="News">
+      <h2>📰 News</h2>
+      <ul></ul>
+    </div>
+    <div id="Spiritual">
+      <h2>🕉️ Spiritual</h2>
+      <ul></ul>
+    </div>
+  </div>
+
+  <div id="player-container">
+    <h2 id="channel-title"></h2>
+    <video id="video-player" controls autoplay></video>
+    <button id="back-button">🔙 Back to Channels</button>
+  </div>
 
   <script>
+    const categories = {
+      Entertainment: ["movie", "drama", "desi", "bollywood", "colors", "zee", "sony", "star"],
+      News: ["news", "ndtv", "aajtak", "abp", "cnn", "bbc"],
+      Spiritual: ["spiritual", "satsang", "bhakti", "sadhna", "om", "ram", "krishna", "shiv", "shirdi"]
+    };
+
+    // Add your trusted IPTV domains here:
+    const trustedDomains = [
+      "example.com",
+      "trusted-iptv.net",
+      "cdn.provider.com",
+      // Add your own safe domains from your m3u URLs
+    ];
+
+    function isUrlSafe(url) {
+      try {
+        const hostname = new URL(url).hostname.toLowerCase();
+        return trustedDomains.some(domain => hostname.endsWith(domain));
+      } catch {
+        return false;
+      }
+    }
+
+    function classifyChannel(name) {
+      const lower = name.toLowerCase();
+      for (const [group, keywords] of Object.entries(categories)) {
+        if (keywords.some(word => lower.includes(word))) {
+          return group;
+        }
+      }
+      return "Entertainment"; // default fallback
+    }
+
     fetch('playlist_auto.m3u')
       .then(res => res.text())
       .then(data => {
         const lines = data.split('\n');
-        const channels = [];
         for (let i = 0; i < lines.length; i++) {
           if (lines[i].startsWith('#EXTINF')) {
             const name = lines[i].split(',').pop().trim();
             const url = lines[i + 1]?.trim();
-            if (url && url.startsWith('http')) {
-              channels.push({ name, url });
+            if (url && url.startsWith('http') && isUrlSafe(url)) {
+              const group = classifyChannel(name);
+              const ul = document.querySelector(`#${group} ul`);
+              const li = document.createElement('li');
+              li.textContent = name;
+              li.addEventListener('click', () => playChannel(name, url));
+              ul.appendChild(li);
             }
           }
         }
-
-        const list = document.getElementById('channel-list');
-        list.innerHTML = '';
-
-        channels.forEach(({ name, url }) => {
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
-          list.appendChild(li);
-        });
-
-        if (channels.length === 0) {
-          list.innerHTML = '<li>No channels found.</li>';
-        }
       })
       .catch(err => {
-        console.error('Failed to load playlist:', err);
-        document.getElementById('channel-list').innerHTML =
-          '<li>Error loading playlist.</li>';
+        document.body.innerHTML = '<p>Failed to load playlist.</p>';
+        console.error(err);
       });
+
+    function playChannel(name, url) {
+      document.getElementById('channel-list-container').style.display = 'none';
+      document.getElementById('player-container').style.display = 'flex';
+      document.getElementById('channel-title').textContent = name;
+      const video = document.getElementById('video-player');
+      video.src = url;
+      video.play();
+    }
+
+    document.getElementById('back-button').addEventListener('click', () => {
+      const video = document.getElementById('video-player');
+      video.pause();
+      video.src = '';
+      document.getElementById('player-container').style.display = 'none';
+      document.getElementById('channel-list-container').style.display = 'block';
+    });
   </script>
 </body>
 </html>
+
