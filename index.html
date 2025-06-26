@@ -6,11 +6,9 @@
   <title>PRAMA IPTV PLAYLIST</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: Arial, sans-serif;
-      height: 100%;
-      overflow: hidden;
+      height: 100%; overflow: hidden;
     }
     header {
       background-color: #2c3e50;
@@ -106,7 +104,6 @@
     const playlist = [
       { name: "YoMovies", url: "https://yomovies.design/" },
       { name: "PlayDesi", url: "https://playdesi.info/" },
-      { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi" },
       { name: "Abzy TV", url: "https://abzy.com/" },
       { name: "Geo TV", url: "https://www.harpalgeo.tv/" },
       { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
@@ -114,11 +111,12 @@
       { name: "YuppTV", url: "https://www.yupptv.com/fast-tv" },
       { name: "Dunya News", url: "https://dunyanews.tv/live/" },
       { name: "Geo News", url: "https://live.geo.tv/" },
-      { name: "Aastha TV", url: "https://www.aasthatv.tv/" }
+      { name: "Aastha TV", url: "https://www.aasthatv.tv/" },
+      { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi" }
     ];
 
     const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "einthusan"],
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi"],
       News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya", "times now", "yupp"],
       Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
     };
@@ -138,7 +136,7 @@
     }
 
     function renderChannels(channels) {
-      Object.values(groups).forEach((div) => (div.innerHTML = ""));
+      Object.values(groups).forEach(div => div.innerHTML = "");
       channels.forEach(({ name, url }) => {
         const group = classify(name);
         const el = document.createElement("div");
@@ -152,68 +150,63 @@
 
       document.getElementById("search").addEventListener("input", (e) => {
         const term = e.target.value.toLowerCase();
-        document.querySelectorAll(".channel").forEach((c) => {
+        document.querySelectorAll(".channel").forEach(c => {
           c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
         });
       });
     }
 
-function blockUnwantedPopups() {
-  const originalOpen = window.open;
-
-  window.open = function (url, name, specs) {
-    if (typeof url === "string" && url.startsWith("https://starscopsinsider.com/")) {
-      return originalOpen.call(window, url, name, specs);
-    } else {
-      console.warn("Blocked popup:", url);
-      return null;
+    function blockUnwantedPopups() {
+      const originalOpen = window.open;
+      window.open = function (url, name, specs) {
+        if (typeof url === "string" && url.startsWith("https://starscopsinsider.com/")) {
+          return originalOpen.call(window, url, name, specs);
+        } else {
+          console.warn("Blocked popup:", url);
+          return null;
+        }
+      };
     }
-  };
-}
 
-function playChannel(name, url) {
-  const frame = document.getElementById("channel-frame");
-  const title = document.getElementById("playerTitle");
-  title.textContent = `Now Viewing: ${name}`;
-  const nameLC = name.toLowerCase();
+    function playChannel(name, url) {
+      const frame = document.getElementById("channel-frame");
+      const title = document.getElementById("playerTitle");
+      title.textContent = `Now Viewing: ${name}`;
+      const nameLC = name.toLowerCase();
 
-  // Always clear existing content
-  frame.removeAttribute("srcdoc");
-  frame.src = "";
+      // Reset iframe content
+      frame.removeAttribute("srcdoc");
+      frame.src = "";
 
-  // Handle YoMovies or Einthusan in new tab
-  if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
-    const newTab = window.open(url, "_blank");
+      // Handle YoMovies / Einthusan
+      if (nameLC.includes("yomovies") || nameLC.includes("einthusan")) {
+        const newTab = window.open(url, "_blank");
+        frame.srcdoc = `
+          <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+            <strong>${name} is Playing on Another Tab</strong>
+          </div>
+        `;
 
-    frame.srcdoc = `
-      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
-        <strong>${name} is Playing on Another Tab</strong>
-      </div>
-    `;
-
-    // Start interval to monitor tab close
-    const checkClosed = setInterval(() => {
-      if (newTab.closed) {
-        clearInterval(checkClosed);
-        frame.removeAttribute("srcdoc");
-        frame.src = "";
-        title.textContent = "Select a channel to view";
+        const checkClosed = setInterval(() => {
+          if (newTab.closed) {
+            clearInterval(checkClosed);
+            frame.removeAttribute("srcdoc");
+            frame.src = "";
+            title.textContent = "Select a channel to view";
+          }
+        }, 1000);
+        return;
       }
-    }, 1000);
 
-    return;
-  }
+      if (nameLC.includes("playdesi")) {
+        blockUnwantedPopups();
+      }
 
-  // If PlayDesi, apply popup blocker
-  if (nameLC.includes("playdesi")) {
-    blockUnwantedPopups();
-  }
-
-  // All other channels load normally in iframe
-  frame.src = url;
-}
+      frame.src = url;
+    }
 
     renderChannels(playlist);
   </script>
 </body>
 </html>
+
