@@ -25,7 +25,7 @@
       overflow: hidden;
     }
     .sidebar {
-      width: 300px;
+      width: 240px;
       background: #ecf0f1;
       padding: 1rem;
       overflow-y: auto;
@@ -53,11 +53,11 @@
       align-items: center;
       justify-content: center;
     }
-    video {
+    iframe {
       width: 100%;
-      max-width: 800px;
-      height: auto;
-      background: black;
+      height: 600px;
+      background: white;
+      border: none;
       border-radius: 8px;
     }
     #search {
@@ -70,6 +70,7 @@
     .loading {
       font-size: 1.2rem;
       color: #2c3e50;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -92,13 +93,35 @@
       </div>
     </div>
     <div class="player">
-      <div id="playerTitle" class="loading">Select a channel to start playing</div>
-      <video id="video" controls></video>
+      <div id="playerTitle" class="loading">Select a channel to view</div>
+      <iframe id="channel-frame"></iframe>
     </div>
   </div>
 
   <script>
-    const playlistUrl = 'playlist_auto.m3u';
+    const playlist = [
+      { name: "YoMovies", url: "https://yomovies.design/" },
+      { name: "PlayDesi", url: "https://playdesi.info/" },
+      { name: "Abzy TV", url: "https://abzy.com/" },
+      { name: "Geo TV", url: "https://www.harpalgeo.tv/" },
+      { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/" },
+      { name: "Hum TV", url: "https://hum.tv/" },
+      { name: "YuppTV News", url: "https://www.yupptv.com/fast-tv" },
+      { name: "Al Jazeera", url: "https://live-hls-web-aje.getaj.net/AJE/01.m3u8" },
+      { name: "Aaj Tak", url: "https://www.aajtak.in/livetv" },
+      { name: "ABP News", url: "https://www.abplive.com/" },
+      { name: "Dunya News", url: "https://dunyanews.tv/live/" },
+      { name: "Geo News", url: "https://live.geo.tv/" },
+      { name: "Sanskar TV", url: "http://livetv.sanskartv.com:1935/sanskartv/sanskartv/playlist.m3u8" },
+      { name: "Sadhna TV", url: "https://cdn.smartstream.video/sadhna/sadhna.stream/playlist.m3u8" },
+      { name: "Aastha TV", url: "https://www.aasthatv.tv/" }
+    ];
+
+    const keywords = {
+      Entertainment: ["movie", "drama", "desi", "geo tv", "zindagi", "hum", "abzy", "playdesi", "yupp"],
+      News: ["news", "ndtv", "aajtak", "abp", "al jazeera", "geo news", "dunya"],
+      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
+    };
 
     const groups = {
       Entertainment: document.querySelector('#Entertainment .list'),
@@ -106,43 +129,18 @@
       Spiritual: document.querySelector('#Spiritual .list')
     };
 
-    const keywords = {
-      Entertainment: ["movie", "drama", "desi", "geo", "zindagi", "hum", "abzy", "playdesi", "yomovie"],
-      News: ["news", "ndtv", "aajtak", "abp", "aljazeera", "geo", "dunya"],
-      Spiritual: ["sansk", "aastha", "sadhna", "om", "ram", "bhakti"]
-    };
-
     function classify(name) {
       const nameLC = name.toLowerCase();
-      for (const [cat, keys] of Object.entries(keywords)) {
-        if (keys.some(k => nameLC.includes(k))) return cat;
+      for (const [group, keys] of Object.entries(keywords)) {
+        if (keys.some(k => nameLC.includes(k))) return group;
       }
       return 'Entertainment';
     }
 
-    function loadPlaylist() {
-      fetch(playlistUrl)
-        .then(res => res.text())
-        .then(data => {
-          const lines = data.split('\n');
-          const channels = [];
-          for (let i = 0; i < lines.length; i++) {
-            if (lines[i].startsWith('#EXTINF')) {
-              const name = lines[i].split(',').pop().trim();
-              const url = lines[i + 1]?.trim();
-              if (url && url.startsWith('http')) {
-                const group = classify(name);
-                channels.push({ name, url, group });
-              }
-            }
-          }
-          renderChannels(channels);
-        });
-    }
-
     function renderChannels(channels) {
       Object.values(groups).forEach(div => div.innerHTML = '');
-      channels.forEach(({ name, url, group }) => {
+      channels.forEach(({ name, url }) => {
+        const group = classify(name);
         const el = document.createElement('div');
         el.className = 'channel';
         el.textContent = name;
@@ -161,16 +159,13 @@
     }
 
     function playChannel(name, url) {
-      const player = document.getElementById('video');
+      const frame = document.getElementById('channel-frame');
       const title = document.getElementById('playerTitle');
-      player.src = url;
-      player.play();
-      title.textContent = `Now Playing: ${name}`;
+      frame.src = url;
+      title.textContent = `Now Viewing: ${name}`;
     }
 
-    loadPlaylist();
+    renderChannels(playlist);
   </script>
 </body>
 </html>
-
-
