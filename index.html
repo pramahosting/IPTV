@@ -175,25 +175,31 @@
       };
     }
 
-    function playChannel(name, url) {
-      const frame = document.getElementById("channel-frame");
-      const title = document.getElementById("playerTitle");
-      title.textContent = `Now Viewing: ${name}`;
+function playChannel(name, url) {
+  const frame = document.getElementById("channel-frame");
+  const title = document.getElementById("playerTitle");
+  title.textContent = `Now Viewing: ${name}`;
 
-      const nameLC = name.toLowerCase();
+  const nameLC = name.toLowerCase();
 
-      if (nameLC.includes("yomovies")) {
-        window.open(url, "_blank");
-        return;
-      }
+  if (nameLC.includes("yomovies")) {
+    window.open(url, "_blank");
+    
+    // 🔧 Show message in iframe area
+    frame.srcdoc = `
+      <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
+        <strong>YoMovies Channel is Playing on Other Tab</strong>
+      </div>
+    `;
+    return;
+  }
 
-      if (nameLC.includes("playdesi")) {
-        blockUnwantedPopups();
-      }
+  if (nameLC.includes("playdesi")) {
+    blockUnwantedPopups();
+  }
 
-      frame.src = url;
-    }
-
+  frame.src = url;
+}
     renderChannels(playlist);
   </script>
 </body>
