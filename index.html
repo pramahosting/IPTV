@@ -19,6 +19,7 @@
     }
     .main {
       display: flex;
+      flex-direction: row;
       height: calc(100% - 72px);
     }
     .sidebar {
@@ -82,6 +83,37 @@
       background: rgba(255, 255, 255, 0);
       display: none;
     }
+    #abzy-tooltip {
+      margin-top: 8px; 
+      font-size: 0.9rem; 
+      color: #444; 
+      background: #f0f4f8; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      padding: 6px 10px;
+      max-width: 500px;
+      text-align: center;
+      user-select: none;
+      font-style: italic;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        padding: 0.5rem;
+      }
+      .player {
+        padding: 0.5rem;
+      }
+      #abzy-tooltip {
+        max-width: 100%;
+        font-size: 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -106,6 +138,9 @@
       <div id="playerTitle" class="loading" style="display:block">Select a channel to view</div>
       <div id="iframe-loading-msg" class="loading">Loading channel...</div>
       <iframe id="channel-frame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+      <div id="abzy-tooltip">
+        Tip: To watch YouTube videos inside ABZY without issues, right-click the video link and select <em>'Open in new tab'</em>.
+      </div>
       <div id="overlay-blocker"></div>
     </div>
   </div>
@@ -225,3 +260,4 @@
   </script>
 </body>
 </html>
+
