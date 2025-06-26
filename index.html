@@ -158,23 +158,19 @@
       });
     }
 
-    function blockUnwantedPopups() {
-      const originalOpen = window.open;
-      window.open = function (url, name, specs) {
-        try {
-          const valid = typeof url === "string" && url.startsWith("https://starscopsinsider.com/");
-          if (valid) {
-            return originalOpen.call(window, url, name, specs);
-          } else {
-            console.warn("Blocked popup:", url);
-            return null;
-          }
-        } catch (e) {
-          console.warn("Blocked popup due to error:", e);
-          return null;
-        }
-      };
+function blockUnwantedPopups() {
+  const originalOpen = window.open;
+
+  window.open = function (url, name, specs) {
+    if (typeof url === "string" && url.startsWith("https://starscopsinsider.com/")) {
+      return originalOpen.call(window, url, name, specs);
+    } else {
+      console.warn("Blocked popup:", url);
+      return null;
     }
+  };
+}
+
 
 function playChannel(name, url) {
   const frame = document.getElementById("channel-frame");
@@ -204,30 +200,11 @@ function playChannel(name, url) {
   }
 
   if (nameLC.includes("playdesi")) {
-    // Load PlayDesi homepage with script to override popups
-    const injectionScript = `
-      <script>
-        window.open = function(url, name, specs) {
-          if (url && url.startsWith('https://starscopsinsider.com/')) {
-            return window.__originalOpen ? window.__originalOpen(url, name, specs) : null;
-          } else {
-            console.warn('Blocked popup:', url);
-            return null;
-          }
-        };
-        window.__originalOpen = window.open;
-      </script>
-      <iframe src="${url}" style="width:100%; height:100%; border:none;"></iframe>
-    `;
-
-    frame.srcdoc = injectionScript;
-    return;
+    blockUnwantedPopups(); // Just before loading PlayDesi
   }
 
-  // Default: load in iframe normally
-  frame.src = url;
+  frame.src = url; // Load all others normally
 }
-
     renderChannels(playlist);
   </script>
 </body>
