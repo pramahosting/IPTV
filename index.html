@@ -149,41 +149,17 @@
       return "Entertainment";
     }
 
-    function renderChannels(channels) {
-      Object.values(groups).forEach(div => div.innerHTML = "");
-      channels.forEach(({ name, url }) => {
-        const group = classify(name);
-        const el = document.createElement("div");
-        el.className = "channel";
-        el.textContent = name;
-        el.dataset.name = name;
-        el.dataset.url = url;
-        el.addEventListener("click", () => playChannel(name, url));
-        groups[group]?.appendChild(el);
-      });
-
-      document.getElementById("search").addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase();
-        document.querySelectorAll(".channel").forEach((c) => {
-          c.style.display = c.dataset.name.toLowerCase().includes(term) ? "" : "none";
-        });
-      });
-    }
-
 function playChannel(name, url) {
   const frame = document.getElementById("channel-frame");
   const title = document.getElementById("playerTitle");
-  const overlay = document.getElementById("overlay-blocker");
+  const currentURL = frame.getAttribute("src");
 
-  frame.removeAttribute("srcdoc");
-  frame.src = "";
-  overlay.style.display = "none";
   title.textContent = `Now Viewing: ${name}`;
 
-  const forceNewTabExact = ["yomovies", "einthusan", "aaj tak"];
-  const nameLC = name.toLowerCase();
+  if (currentURL === url) return; // ✅ Avoid reload if already selected
 
-  if (forceNewTabExact.includes(nameLC)) {
+  // YoMovies and Einthusan open in new tab
+  if (["yomovies", "einthusan"].some(s => name.toLowerCase().includes(s))) {
     const tab = window.open(url, "_blank");
     frame.srcdoc = `
       <div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:1.2rem; color:#2c3e50;">
@@ -201,15 +177,9 @@ function playChannel(name, url) {
     return;
   }
 
-  if (nameLC === "playdesi") {
-    overlay.style.display = "block";
-    overlay.onclick = () => overlay.style.display = "none";
-  }
-
+  frame.removeAttribute("srcdoc");
   frame.src = url;
 }
-
-
     renderChannels(playlist);
   </script>
 </body>
