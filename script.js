@@ -59,12 +59,6 @@ if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includ
   handleNewTabOnly(channel.name, channel.url);
   return;
 }
-
-// ✅ Also send ABZY YouTube links to a new tab
-if (nameLC.includes("abzy") && channel.url.includes("youtube.com")) {
-  handleNewTabOnly(channel.name, channel.url);
-  return;
-}
   // Set title
   title.innerHTML = `<i class="fas fa-play-circle"></i> Now Playing: ${channel.name}`;
 
@@ -140,46 +134,6 @@ if (nameLC.includes("playdesi1")) {
   `;
   return;
 }
-
-
-// ✅ Convert standard YouTube watch URLs to embed format for ABZY
-if (nameLC.includes("abzy") && channel.url.includes("youtube.com/watch")) {
-  try {
-    const urlObj = new URL(channel.url);
-    const videoId = urlObj.searchParams.get("v");
-    if (videoId) {
-      channel.url = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    }
-  } catch (e) {
-    console.warn("Invalid YouTube URL format for ABZY:", channel.url);
-  }
-}
-
-if (nameLC.includes("playdesi1")) {
-  frame.srcdoc = `
-    <script>
-      document.addEventListener("click", function(e) {
-        let target = e.target;
-        while (target && target.tagName !== "A") {
-          target = target.parentElement;
-        }
-        if (target && target.href) {
-          const url = target.href;
-          if (url.includes("starscopinsider.com")) {
-            window.open(url, "_blank", "noopener");
-          } else {
-            e.preventDefault();
-            alert("Blocked: Only links to starscopinsider.com are allowed.");
-          }
-        }
-      }, true);
-    <\/script>
-    <iframe src="${channel.url}" style="width:100%; height:100%; border:none;"></iframe>
-  `;
-  return;
-}
-
-
   // Start loading the channel
   frame.src = channel.url;
 
