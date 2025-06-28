@@ -8,13 +8,14 @@ let currentLoadTimeout = null;
 function autoPlayPlayDesi() {
   if (currentUser) {
     setTimeout(() => {
-      const playdesiElement = document.querySelector(`.channel[data-name="PlayDesi1"]`);
-      if (playdesi1Element) {
-        playdesi1Element.click();
+      const playdesiElement = document.querySelector(`.channel[data-name="YuppTV"]`);
+      if (playdesiElement) {
+        playdesiElement.click();
       }
     }, 100);
   }
 }
+
 
 const fsBtn = document.getElementById('launch-fullscreen-btn');
 const fsIcon = fsBtn.querySelector('i');
@@ -76,10 +77,6 @@ if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includ
   frame.removeAttribute('srcdoc');
   frame.src = "";
 
- // if (nameLC.includes("playdesi1")) {
-    // Restrict everything: no popups, no forms, no same-origin
-  //  frame.sandbox = "allow-scripts";
-// } else 
     if (nameLC.includes("abzy")) {
        frame.sandbox = "allow-scripts allow-popups";
     } else {
@@ -98,42 +95,75 @@ if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includ
   };
 
 if (nameLC.includes("playdesi1")) {
+  const sanitizedUrl = channel.url;
+
+  frame.removeAttribute('src');
   frame.srcdoc = `
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-      }
-      iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-    </style>
-    <script>
-      document.addEventListener("click", function(e) {
-        let target = e.target;
-        while (target && target.tagName !== "A") {
-          target = target.parentElement;
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
         }
-        if (target && target.href) {
-          const url = target.href;
-          if (url.includes("starscopinsider.com")) {
-            window.open(url, "_blank", "noopener");
-          } else {
-            e.preventDefault();
-            alert("Blocked: Only starscopinsider.com is allowed.");
+        iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+      </style>
+    </head>
+    <body>
+      <iframe id="innerFrame" src="${sanitizedUrl}"
+              sandbox="allow-scripts allow-popups allow-same-origin allow-forms"
+              allow="fullscreen">
+      </iframe>
+
+      <script>
+        const innerFrame = document.getElementById('innerFrame');
+
+        window.addEventListener("message", function(event) {
+          const url = event.data;
+          if (typeof url === "string" && url.startsWith("https://starscopinsider.com")) {
+            window.open(url, "_blank");
           }
-        }
-      }, true);
-    <\/script>
-    <iframe src="${channel.url}" allow="allow-scripts allow-popups allow-top-navigation-by-user-activation"></iframe>
+        });
+
+        // Inject script into inner frame to trap clicks
+        innerFrame.onload = function () {
+          try {
+            const script = document.createElement('script');
+            script.textContent = \`
+              document.addEventListener('click', function(e) {
+                let el = e.target;
+                while (el && el.tagName !== 'A') el = el.parentElement;
+                if (el && el.href) {
+                  e.preventDefault();
+                  if (el.href.includes('starscopinsider.com')) {
+                    parent.postMessage(el.href, '*');
+                  } else {
+                    alert('Blocked: Only starscopinsider.com is allowed to open.');
+                  }
+                }
+              }, true);
+            \`;
+            innerFrame.contentWindow.document.body.appendChild(script);
+          } catch (err) {
+            console.warn('Cross-origin script injection blocked');
+          }
+        };
+      </script>
+    </body>
+    </html>
   `;
   return;
 }
+
+
   // Start loading the channel
   frame.src = channel.url;
 
@@ -318,4 +348,9 @@ document.getElementById('fullscreen-btn').addEventListener('click', () => {
 document.addEventListener('fullscreenchange', () => {
   const icon = document.querySelector('#fullscreen-btn i');
   icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+});
+
+// ✅ Call autoPlayPlayDesi when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  autoPlayPlayDesi();
 });
