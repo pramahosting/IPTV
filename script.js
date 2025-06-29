@@ -56,7 +56,7 @@ function playChannel(channel, element) {
   currentChannelElement = element;
 
 // Special handling for external tab channels
-if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includes("playdesi2")) {
+if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includes("playdesi2") || nameLC.includes("shemaroo")) {
   handleNewTabOnly(channel.name, channel.url);
   return;
 }
