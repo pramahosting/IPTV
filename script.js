@@ -209,10 +209,11 @@ function injectLinkFilter() {
 
 // Handle channels that open in new tab
 function handleNewTabOnly(name, url) {
-  const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
-                 name.toLowerCase().includes("einthusan") ? "einthusan" :
-                 name.toLowerCase().includes("playdesi2") ? "playdesi2" :
-                 "external";
+const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
+               name.toLowerCase().includes("einthusan") ? "einthusan" :
+               name.toLowerCase().includes("playdesi2") ? "playdesi2" :
+               name.toLowerCase().includes("shemaroo") ? "shemaroo" :
+               "external";
 
   // Close previous tab if still open
   if (openTabs[tabKey] && !openTabs[tabKey].closed) {
