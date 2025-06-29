@@ -227,45 +227,27 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
   const frame = document.getElementById('player-frame');
   const title = document.getElementById('playerTitle');
 
-  frame.srcdoc = `
+ frame.srcdoc = `
   <html>
     <head>
       <style>
         body {
           display: flex;
-          flex-direction: column;
           align-items: center;
           justify-content: center;
-          height: 100%;
-          background: #f0f0f0;
-          color: #2c3e50;
-          font-family: Arial, sans-serif;
+          height: 100vh;
+          font-family: sans-serif;
           text-align: center;
           padding: 20px;
         }
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-          100% { transform: scale(1); }
-        }
       </style>
-      <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          document.querySelectorAll("a").forEach(link => {
-            link.setAttribute("target", "_blank");
-            link.setAttribute("rel", "noopener noreferrer");
-          });
-        });
-      </script>
     </head>
     <body>
-      <h2 style="font-size:1.8rem; margin-bottom:20px;">\${name} is Playing in Another Tab</h2>
-      <p style="font-size:1.1rem; margin-bottom:30px;">Close the \${name} tab to return to the player</p>
-      <div style="font-size:4rem; color:#3498db; animation:pulse 2s infinite;">📺</div>
+      <h2 style="font-size:1.8rem;">${name} is Playing in Another Tab</h2>
+      <p>Close the ${name} tab to return to the player.</p>
     </body>
   </html>
 `;
-
 
   title.innerHTML = `<i class="fas fa-play-circle"></i> ${name} opened in another tab`;
 
