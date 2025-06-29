@@ -11,7 +11,8 @@ const playlist = [
   { name: "YuppTV", url: "https://www.yupptv.com/fast-tv", icon: "fa-satellite", category: "entertainment" },
   { name: "Dunya News", url: "https://dunyanews.tv/live/", icon: "fa-newspaper", category: "news" },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
-  { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" }
+  { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
+  { name: "Shamaroo TV", url: "https://https://www.shemaroome.com/, icon: "fa-bolt", categoty: "entertainment" }
 ];
 
 // Render channels sorted alphabetically
