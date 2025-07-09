@@ -56,7 +56,7 @@ function playChannel(channel, element) {
   currentChannelElement = element;
 
 // Special handling for external tab channels
-if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includes("playdesi2") || nameLC.includes("shemaroo") || nameLC.includes("oldmovies")) {
+if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includes("playdesi2") || nameLC.includes("shemaroo")) {
   handleNewTabOnly(channel.name, channel.url);
   return;
 }
@@ -213,7 +213,6 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
                name.toLowerCase().includes("einthusan") ? "einthusan" :
                name.toLowerCase().includes("playdesi2") ? "playdesi2" :
                name.toLowerCase().includes("shemaroo") ? "shemaroo" :
-               name.toLowerCase().includes("oldmovies") ? "oldmovies" :
                "external";
 
   // Close previous tab if still open
