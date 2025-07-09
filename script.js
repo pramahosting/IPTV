@@ -8,7 +8,7 @@ let currentLoadTimeout = null;
 function autoPlayPlayDesi() {
   if (currentUser) {
     setTimeout(() => {
-      const playdesiElement = document.querySelector(`.channel[data-name="YuppTV"]`);
+      const playdesiElement = document.querySelector(.channel[data-name="YuppTV"]);
       if (playdesiElement) {
         playdesiElement.click();
       }
@@ -61,7 +61,7 @@ if (nameLC.includes("yomovies") || nameLC.includes("einthusan") || nameLC.includ
   return;
 }
   // Set title
-  title.innerHTML = `<i class="fas fa-play-circle"></i> Now Playing: ${channel.name}`;
+  title.innerHTML = <i class="fas fa-play-circle"></i> Now Playing: ${channel.name};
 
   // Show loading
   loadingContainer.style.display = 'flex';
@@ -98,7 +98,7 @@ if (nameLC.includes("playdesi1")) {
   const sanitizedUrl = channel.url;
 
   frame.removeAttribute('src');
-  frame.srcdoc = `
+  frame.srcdoc = 
     <!DOCTYPE html>
     <html>
     <head>
@@ -137,7 +137,7 @@ if (nameLC.includes("playdesi1")) {
         innerFrame.onload = function () {
           try {
             const script = document.createElement('script');
-            script.textContent = \`
+            script.textContent = \
               document.addEventListener('click', function(e) {
                 let el = e.target;
                 while (el && el.tagName !== 'A') el = el.parentElement;
@@ -150,7 +150,7 @@ if (nameLC.includes("playdesi1")) {
                   }
                 }
               }, true);
-            \`;
+            \;
             innerFrame.contentWindow.document.body.appendChild(script);
           } catch (err) {
             console.warn('Cross-origin script injection blocked');
@@ -159,7 +159,7 @@ if (nameLC.includes("playdesi1")) {
       </script>
     </body>
     </html>
-  `;
+  ;
   return;
 }
 
@@ -222,14 +222,13 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
   }
 
   // Open new tab
-  const newTab = window.open('', '_blank', 'noopener,noreferrer');
-  newTab.location.href = url;
-  
+  openTabs[tabKey] = window.open(url, "_blank");
+
   // Display iframe message
   const frame = document.getElementById('player-frame');
   const title = document.getElementById('playerTitle');
 
- frame.srcdoc = `
+ frame.srcdoc = 
   <html>
     <head>
       <style>
@@ -249,9 +248,9 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
       <p>Close the ${name} tab to return to the player.</p>
     </body>
   </html>
-`;
+;
 
-  title.innerHTML = `<i class="fas fa-play-circle"></i> ${name} opened in another tab`;
+  title.innerHTML = <i class="fas fa-play-circle"></i> ${name} opened in another tab;
 
 
 // Clear srcdoc when tab closes
@@ -260,7 +259,7 @@ const checkClosed = setInterval(() => {
     clearInterval(checkClosed);
     frame.removeAttribute("srcdoc");
     frame.src = "";
-    title.innerHTML = `<i class="fas fa-play-circle"></i> Select a channel to start streaming`;
+    title.innerHTML = <i class="fas fa-play-circle"></i> Select a channel to start streaming;
 
     // ✅ INSERT THIS LINE
     loadingContainer.style.display = 'none';  // Hides spinner when idle
@@ -292,11 +291,11 @@ document.getElementById('expand-btn').addEventListener('click', () => {
     const expandedControls = document.createElement('div');
     expandedControls.id = 'expanded-controls';
     expandedControls.className = 'expanded-controls';
-    expandedControls.innerHTML = `
+    expandedControls.innerHTML = 
       <button class="control-btn" id="contract-btn" title="Contract Player">
         <i class="fas fa-compress"></i>
       </button>
-    `;
+    ;
     playerContent.appendChild(expandedControls);
     
     document.getElementById('contract-btn').addEventListener('click', () => {
@@ -322,7 +321,7 @@ document.getElementById('fullscreen-btn').addEventListener('click', () => {
   
   if (!document.fullscreenElement) {
     playerContent.requestFullscreen().catch(err => {
-      console.error(`Error attempting to enable fullscreen: ${err}`);
+      console.error(Error attempting to enable fullscreen: ${err});
     });
   } else {
     document.exitFullscreen();
