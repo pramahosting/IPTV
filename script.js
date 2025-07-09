@@ -222,8 +222,9 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
   }
 
   // Open new tab
-  openTabs[tabKey] = window.open(url, "_blank");
-
+  const newTab = window.open('', '_blank', 'noopener,noreferrer');
+  newTab.location.href = url;
+  
   // Display iframe message
   const frame = document.getElementById('player-frame');
   const title = document.getElementById('playerTitle');
