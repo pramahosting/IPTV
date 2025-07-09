@@ -222,7 +222,15 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
   }
 
   // Open new tab
-  openTabs[tabKey] = window.open(url, "_blank");
+  const newTab = window.open('', '_blank', 'noopener,noreferrer');
+  if (newTab) {
+    newTab.opener = null;
+    newTab.location.href = url;
+    openTabs[tabKey] = newTab;
+  } else {
+    alert("Popup blocked. Please allow popups for this site.");
+    return;
+  }
 
   // Display iframe message
   const frame = document.getElementById('player-frame');
