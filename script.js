@@ -213,7 +213,7 @@ const tabKey = name.toLowerCase().includes("yomovies") ? "yomovies" :
                name.toLowerCase().includes("einthusan") ? "einthusan" :
                name.toLowerCase().includes("playdesi2") ? "playdesi2" :
                name.toLowerCase().includes("shemaroo") ? "shemaroo" :
-               name.toLowerCase().includes("shemaroo") ? "oldmovies" :
+               name.toLowerCase().includes("oldmovies") ? "oldmovies" :
                "external";
 
   // Close previous tab if still open
