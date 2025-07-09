@@ -13,7 +13,7 @@ const playlist = [
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
   { name: "Shemaroo TV", url: "https://www.shemaroome.com/", icon: "fa-film", category: "entertainment" },
-  { name: "OldMovies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEq-CDqZ76FmADCuGSf", icon: "fa-film", category: "entertainment" }
+  { name: "OldMovies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEq-CDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment" }
 ];
 
 // Render channels sorted alphabetically
