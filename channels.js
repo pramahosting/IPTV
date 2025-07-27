@@ -6,7 +6,7 @@ const playlist = [
   { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment" },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment" },
-  { name: "Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
+  { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "YuppTV", url: "https://www.yupptv.com/fast-tv", icon: "fa-satellite", category: "entertainment" },
   { name: "Dunya News", url: "https://dunyanews.tv/live/", icon: "fa-newspaper", category: "news" },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
