@@ -285,6 +285,3 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
-
-
-
