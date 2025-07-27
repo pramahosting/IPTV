@@ -3,6 +3,9 @@ let lastClicked = 0;
 let currentChannelElement = null;
 let currentLoadTimeout = null;
 
+// 🔒 Allow only one popup (e.g., Hindi Movies)
+let popupAllowedOnce = false;
+
 function autoPlay() {
   if (currentUser) {
     setTimeout(() => {
@@ -53,7 +56,9 @@ function playChannel(channel, element) {
   title.innerHTML = `<i class="fas fa-play-circle"></i> Now Playing: ${channel.name}`;
   loadingContainer.style.display = 'flex';
   frame.style.display = 'none';
+
   if (currentLoadTimeout) clearTimeout(currentLoadTimeout);
+
   frame.removeAttribute('srcdoc');
   frame.removeAttribute('src');
 
@@ -73,7 +78,31 @@ function playChannel(channel, element) {
     const sanitizedUrl = channel.url;
     frame.removeAttribute('src');
     frame.srcdoc = `<!DOCTYPE html><html><head><style>html,body{margin:0;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none}</style></head><body><iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe><script>
-const innerFrame=document.getElementById('innerFrame');window.addEventListener('message',e=>{const url=e.data;if(typeof url==='string'&&url.startsWith('https://starscopinsider.com'))window.open(url,'_blank')});innerFrame.onload=()=>{try{const s=document.createElement('script');s.textContent=\`document.addEventListener('click',e=>{let el=e.target;while(el&&el.tagName!=='A')el=el.parentElement;if(el&&el.href){e.preventDefault();if(el.href.includes('starscopinsider.com'))parent.postMessage(el.href,'*');else alert('Blocked: Only starscopinsider.com is allowed.')}});\`;innerFrame.contentWindow.document.body.appendChild(s);}catch{console.warn('Cross-origin script injection blocked')}};</script></body></html>`;
+const innerFrame=document.getElementById('innerFrame');
+window.addEventListener('message', e => {
+  const url = e.data;
+  if (typeof url === 'string' && url.startsWith('https://starscopinsider.com')) window.open(url, '_blank');
+});
+innerFrame.onload = () => {
+  try {
+    const s = document.createElement('script');
+    s.textContent = \`
+      document.addEventListener('click', e => {
+        let el = e.target;
+        while (el && el.tagName !== 'A') el = el.parentElement;
+        if (el && el.href) {
+          e.preventDefault();
+          if (el.href.includes('starscopinsider.com')) parent.postMessage(el.href, '*');
+          else alert('Blocked: Only starscopinsider.com is allowed.');
+        }
+      });
+    \`;
+    innerFrame.contentWindow.document.body.appendChild(s);
+  } catch {
+    console.warn('Cross-origin script injection blocked');
+  }
+};
+</script></body></html>`;
     return;
   }
 
@@ -98,51 +127,36 @@ function handleNewTabOnly(name, url) {
   frame.style.display = 'none';
   if (loadingContainer) loadingContainer.style.display = 'none';
 
+  // 🔒 Block all popups after Hindi Movies popup has been opened
+  if (popupAllowedOnce && name !== "Hindi Movies") {
+    alert("Popups are blocked after opening Hindi Movies.");
+    console.warn("Popup blocked for:", name);
+    return;
+  }
+
   try {
     if (openTabs[tabKey] && !openTabs[tabKey].closed) {
       openTabs[tabKey].close();
     }
 
-    // Block new tab if URL does NOT contain 'starscopinsider.com'
-    if (!url.includes('starscopinsider.com')) {
-      alert("Blocked: Only 'starscopinsider.com' URLs are allowed to open in a new tab.");
-      return; // Do not open a tab at all
-    }
-
-    // Open new tab only for allowed URLs
     const newTab = window.open(url, '_blank');
 
     if (!newTab) {
       console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
       frame.srcdoc = `
-        <html>
-          <head>
-            <style>
-              body { 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                flex-direction: column; 
-                height: 100vh; 
-                font-family: sans-serif; 
-                text-align: center; 
-                background: #000; 
-                color: #fff; 
-              }
-            </style>
-          </head>
-          <body>
-            <h2>Popup Blocked</h2>
-            <p>Please allow popups for this site and try again.</p>
-          </body>
-        </html>
-      `;
+        <html><body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
+        <h2>Popup Blocked</h2><p>Please allow popups for this site and try again.</p></body></html>`;
       frame.style.display = 'block';
       title.innerHTML = `<i class="fas fa-play-circle"></i> Popup Blocked for ${name}`;
       return;
     }
 
     openTabs[tabKey] = newTab;
+
+    // Set flag only when Hindi Movies is opened
+    if (name === "Hindi Movies") {
+      popupAllowedOnce = true;
+    }
 
     setTimeout(() => {
       frame.srcdoc = `
@@ -177,11 +191,9 @@ function handleNewTabOnly(name, url) {
             <p>Close the ${name} tab or click below to return.</p>
             <button onclick="parent.postMessage('return-player', '*')">Return to Player</button> 
           </body>
-        </html>
-      `;
+        </html>`;
       frame.style.display = 'block';
       title.innerHTML = `<i class="fas fa-play-circle"></i> ${name} opened in another tab`;
-      console.log(`Iframe srcdoc set for ${name}`);
     }, 100);
 
     document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
@@ -209,23 +221,16 @@ function handleNewTabOnly(name, url) {
       frame.style.display = 'none';
       title.innerHTML = `<i class="fas fa-play-circle"></i> Select a channel to start streaming`;
       if (loadingContainer) loadingContainer.style.display = 'none';
-      console.log(`Player reset for ${name}`);
     }
   } catch (e) {
     console.error(`Error in handleNewTabOnly for ${name}:`, e);
     frame.srcdoc = `
       <html>
-        <head>
-          <style>
-            body { display: flex; align-items: center; justify-content: center; flex-direction: column; height: 100vh; font-family: sans-serif; text-align: center; background: #000; color: #fff; }
-          </style>
-        </head>
-        <body>
+        <body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
           <h2>Error</h2>
           <p>Failed to load ${name}. Please try again.</p>
         </body>
-      </html>
-    `;
+      </html>`;
     frame.style.display = 'block';
     title.innerHTML = `<i class="fas fa-play-circle"></i> Error loading ${name}`;
   }
@@ -255,8 +260,7 @@ document.getElementById('expand-btn').addEventListener('click', () => {
     expandedControls.innerHTML = `
       <button class="control-btn" id="contract-btn" title="Contract Player">
         <i class="fas fa-compress"></i>
-      </button>
-    `;
+      </button>`;
     playerContent.appendChild(expandedControls);
 
     document.getElementById('contract-btn').addEventListener('click', () => {
@@ -281,5 +285,6 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
+
 
 
