@@ -8,13 +8,58 @@ let popupAllowedOnce = false;
 
 function autoPlay() {
   if (currentUser) {
+    // Optionally change this delay or remove it
     setTimeout(() => {
+      // By default, don't autoplay anything, just show welcome
+      showLandingPageMessage();
+
+      // Uncomment this if you want to auto-select a default channel like Yupp TV
+      /*
       const autoPlayElement = document.querySelector('.channel[data-name="Yupp TV"]');
       if (autoPlayElement) {
         autoPlayElement.click();
       }
+      */
     }, 100);
   }
+}
+
+function showLandingPageMessage() {
+  const frame = document.getElementById('player-frame');
+  const title = document.getElementById('playerTitle');
+  const loadingContainer = document.getElementById('loading-container');
+
+  frame.srcdoc = `
+    <html>
+      <head>
+        <style>
+          body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            background: #000;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+          }
+          h2 {
+            font-size: 1.6rem;
+            margin: 0;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Welcome to Free IPTV Streaming</h1>
+        <h2>Please select a channel from the left sidebar to begin watching.</h2>
+        <h3>Note: Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</h3>
+      </body>
+    </html>`;
+  
+  frame.style.display = 'block';
+  if (loadingContainer) loadingContainer.style.display = 'none';
+  if (title) title.innerHTML = `<i class="fas fa-info-circle"></i> Welcome`;
 }
 
 const fsBtn = document.getElementById('launch-fullscreen-btn');
@@ -287,3 +332,4 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
+
