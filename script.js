@@ -153,9 +153,11 @@ function handleNewTabOnly(name, url) {
 
     openTabs[tabKey] = newTab;
 
-    // Set flag only when Hindi Movies is opened
-    if (name === "Hindi Movies") {
+    //🔒 Block all popups after the first new tab is opened
+    if (popupAllowedOnce) {
+      alert(`Only one popup is allowed per session. '${name}' was blocked.`);
       popupAllowedOnce = true;
+      return;
     }
 
     setTimeout(() => {
