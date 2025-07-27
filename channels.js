@@ -1,12 +1,12 @@
 // Channel data - sorted alphabetically in each category
 const playlist = [
-  { name: "PlayDesi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
+  { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
   { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal" },
-  { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment" },
+  { name: "ARY TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment" },
   { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment" },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment" },
-  { name: "YoMovies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
+  { name: "Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "YuppTV", url: "https://www.yupptv.com/fast-tv", icon: "fa-satellite", category: "entertainment" },
   { name: "Dunya News", url: "https://dunyanews.tv/live/", icon: "fa-newspaper", category: "news" },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
