@@ -77,6 +77,60 @@ signupBtn.addEventListener('click', () => {
   }
 });
 
+// Reset password
+document.getElementById('reset-password-btn').addEventListener('click', () => {
+  const username = prompt("Enter your username to reset the password:").trim().toLowerCase();
+
+  const userKey = Object.keys(users).find(key => key.toLowerCase() === username);
+
+  if (!userKey) {
+    showError("Username not found");
+    return;
+  }
+
+  const newPassword = prompt("Enter your new password:");
+  if (!newPassword || newPassword.length < 3) {
+    showError("Password must be at least 3 characters");
+    return;
+  }
+
+  users[userKey] = newPassword;
+  localStorage.setItem('users', JSON.stringify(users));
+  alert(`Password reset successfully for ${userKey}`);
+});
+
+// Delete account
+document.getElementById('delete-account-btn').addEventListener('click', () => {
+  const username = prompt("Enter your username to delete the account:").trim().toLowerCase();
+
+  const userKey = Object.keys(users).find(key => key.toLowerCase() === username);
+  if (!userKey) {
+    showError("Username not found");
+    return;
+  }
+
+  const confirm = window.confirm(`Are you sure you want to delete the account "${userKey}"? This cannot be undone.`);
+  if (!confirm) return;
+
+  delete users[userKey];
+  localStorage.setItem('users', JSON.stringify(users));
+
+  // Log out if this user was logged in
+  if (currentUser === userKey) {
+    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser');
+    currentUser = null;
+    loginModal.style.display = 'flex';
+    userGreeting.textContent = "Welcome! Please log in";
+    document.getElementById('playerTitle').innerHTML = '<i class="fas fa-play-circle"></i> Select a channel to start streaming';
+    document.getElementById('player-frame').src = "";
+    document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+  }
+
+  alert(`Account "${userKey}" has been deleted.`);
+});
+
+
 // Logout functionality
 logoutBtn.addEventListener('click', () => {
   sessionStorage.removeItem('currentUser');
