@@ -6,7 +6,7 @@ let currentLoadTimeout = null;
 function autoPlay() {
   if (currentUser) {
     setTimeout(() => {
-      const autoPlayElement = document.querySelector('.channel[data-name="YuppTV"]');
+      const autoPlayElement = document.querySelector('.channel[data-name="Yupp TV"]');
       if (autoPlayElement) {
         autoPlayElement.click();
       }
@@ -72,7 +72,8 @@ function playChannel(channel, element) {
   if (channel.isSpecialIframe) {
     const sanitizedUrl = channel.url;
     frame.removeAttribute('src');
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>html,body{margin:0;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none}</style></head><body><iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe><script>const innerFrame=document.getElementById('innerFrame');window.addEventListener('message',e=>{const url=e.data;if(typeof url==='string'&&url.startsWith('https://starscopinsider.com'))window.open(url,'_blank')});innerFrame.onload=()=>{try{const s=document.createElement('script');s.textContent=\`document.addEventListener('click',e=>{let el=e.target;while(el&&el.tagName!=='A')el=el.parentElement;if(el&&el.href){e.preventDefault();if(el.href.includes('starscopinsider.com'))parent.postMessage(el.href,'*');else alert('Blocked: Only starscopinsider.com is allowed.')}});\`;innerFrame.contentWindow.document.body.appendChild(s);}catch{console.warn('Cross-origin script injection blocked')}};<\/script></body></html>`;
+    frame.srcdoc = `<!DOCTYPE html><html><head><style>html,body{margin:0;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none}</style></head><body><iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe><script>
+const innerFrame=document.getElementById('innerFrame');window.addEventListener('message',e=>{const url=e.data;if(typeof url==='string'&&url.startsWith('https://starscopinsider.com'))window.open(url,'_blank')});innerFrame.onload=()=>{try{const s=document.createElement('script');s.textContent=\`document.addEventListener('click',e=>{let el=e.target;while(el&&el.tagName!=='A')el=el.parentElement;if(el&&el.href){e.preventDefault();if(el.href.includes('starscopinsider.com'))parent.postMessage(el.href,'*');else alert('Blocked: Only starscopinsider.com is allowed.')}});\`;innerFrame.contentWindow.document.body.appendChild(s);}catch{console.warn('Cross-origin script injection blocked')}};<\/script></body></html>`;
     return;
   }
 
