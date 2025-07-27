@@ -1,0 +1,287 @@
+/* Popup Blocker Notification Styles */
+.popup-blocker-notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  z-index: 9999;
+  font-size: 14px;
+  font-weight: 600;
+  animation: slideInRight 0.3s ease-out;
+  max-width: 300px;
+  border-left: 4px solid #fff;
+}
+
+.popup-blocker-notification.success {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.popup-blocker-notification.info {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.popup-blocker-notification .icon {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.popup-blocker-notification .close-btn {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.popup-blocker-notification .close-btn:hover {
+  opacity: 1;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Security indicator */
+.security-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #2ecc71;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 1000;
+  border: 1px solid #2ecc71;
+  animation: pulse 2s infinite;
+}
+
+.security-indicator .shield-icon {
+  margin-right: 5px;
+  color: #2ecc71;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+  }
+}
+
+/* Enhanced iframe styles for better security visualization */
+iframe[data-popup-blocked] {
+  border: 2px solid #e74c3c !important;
+  border-radius: 4px;
+}
+
+iframe[data-youtube-enhanced] {
+  border: 2px solid #2ecc71 !important;
+  border-radius: 4px;
+}
+
+/* Blocked content overlay */
+.blocked-content-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10000;
+  font-weight: 600;
+}
+
+.blocked-content-overlay .blocked-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.blocked-content-overlay .blocked-text {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.blocked-content-overlay .blocked-reason {
+  font-size: 14px;
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* YouTube playlist enhancements */
+.youtube-playlist-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  padding: 5px 10px;
+  color: white;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+.youtube-playlist-controls .playlist-icon {
+  color: #ff6b6b;
+  margin-right: 5px;
+}
+
+/* Popup blocker stats */
+.popup-blocker-stats {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  z-index: 999;
+  border: 1px solid #34495e;
+  min-width: 150px;
+}
+
+.popup-blocker-stats .stat-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 2px 0;
+}
+
+.popup-blocker-stats .stat-label {
+  opacity: 0.7;
+}
+
+.popup-blocker-stats .stat-value {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.popup-blocker-stats .stat-value.success {
+  color: #2ecc71;
+}
+
+/* Enhanced player controls for YouTube */
+.player-content[data-youtube-active] .youtube-playlist-controls {
+  display: block;
+}
+
+.player-content:not([data-youtube-active]) .youtube-playlist-controls {
+  display: none;
+}
+
+/* Dark overlay for blocking animations */
+.popup-block-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(231, 76, 60, 0.1);
+  z-index: 10001;
+  pointer-events: none;
+  animation: flashRed 0.3s ease-out;
+}
+
+@keyframes flashRed {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Console log styling for debugging */
+.debug-console {
+  position: fixed;
+  bottom: 60px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #2ecc71;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  max-width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #2ecc71;
+  z-index: 998;
+}
+
+.debug-console .log-entry {
+  margin: 2px 0;
+  opacity: 0.8;
+}
+
+.debug-console .log-entry.blocked {
+  color: #e74c3c;
+}
+
+.debug-console .log-entry.allowed {
+  color: #2ecc71;
+}
+
+.debug-console .log-entry.info {
+  color: #3498db;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .popup-blocker-notification {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .security-indicator {
+    bottom: 10px;
+    left: 10px;
+    font-size: 10px;
+  }
+  
+  .popup-blocker-stats {
+    right: 10px;
+    font-size: 10px;
+    min-width: 120px;
+  }
+}

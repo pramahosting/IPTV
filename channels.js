@@ -13,7 +13,11 @@ const playlist = [
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
   { name: "Shemaroo TV", url: "https://www.shemaroome.com/", icon: "fa-film", category: "entertainment", openInNewTab: true },
-  { name: "OldMovies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true }
+  { name: "Old Movies Playlist", url: "https://www.youtube.com/embed/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf&autoplay=1", icon: "fa-play-circle", category: "entertainment" },
+  { name: "Bollywood Hits", url: "https://www.youtube.com/embed/playlist?list=PLjjOk4jMggv4h_yUIKdcmkU8hHkRnb4Iq&autoplay=1", icon: "fa-music", category: "entertainment" },
+  { name: "Pakistani Dramas", url: "https://www.youtube.com/embed/playlist?list=PLI3WPRNHAe8jrKatKQV4rw2v8B9XHpzPm&autoplay=1", icon: "fa-tv", category: "entertainment" },
+  { name: "Islamic Songs", url: "https://www.youtube.com/embed/playlist?list=PLYEKdYWhg0TZJ0kVlWE4DePEOkHZ3H7pM&autoplay=1", icon: "fa-music", category: "spiritual" },
+  { name: "Quran Recitation", url: "https://www.youtube.com/embed/playlist?list=PLRhMhTqjCaMbTTBKbLKz1c_d7lJzUnQd_&autoplay=1", icon: "fa-book-open", category: "spiritual" }
 ];
 
 function renderChannels() {
