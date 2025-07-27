@@ -1,5 +1,4 @@
 // Channel data - sorted alphabetically in each category
-// Channel data - sorted alphabetically in each category
 const playlist = [
   { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
   { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal" },
