@@ -1,7 +1,6 @@
 // Channel data - sorted alphabetically in each category
 const playlist = [
-  { name: "PlayDesi1", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
-  { name: "PlayDesi2", url: "https://playdesi.pk/", icon: "fa-bolt", category: "entertainment", openInNewTab: true },
+  { name: "PlayDesi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
   { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal" },
   { name: "ARY Zindagi TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment" },
   { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true },
@@ -12,8 +11,7 @@ const playlist = [
   { name: "Dunya News", url: "https://dunyanews.tv/live/", icon: "fa-newspaper", category: "news" },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
-  { name: "Shemaroo TV", url: "https://www.shemaroome.com/", icon: "fa-film", category: "entertainment", openInNewTab: true },
-  { name: "OldMovies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true }
+  { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true }
 ];
 
 function renderChannels() {
