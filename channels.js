@@ -11,6 +11,7 @@ const playlist = [
   { name: "Dunya News", url: "https://dunyanews.tv/live/", icon: "fa-newspaper", category: "news" },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news" },
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
+  { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true, blockUnsafe: true  },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true }
  ];
 
