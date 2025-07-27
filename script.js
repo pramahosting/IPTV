@@ -127,9 +127,9 @@ function handleNewTabOnly(name, url) {
   frame.style.display = 'none';
   if (loadingContainer) loadingContainer.style.display = 'none';
 
-  // 🔒 Block all popups after Hindi Movies popup has been opened
-  if (popupAllowedOnce && name !== "Hindi Movies") {
-    alert("Popups are blocked after opening Hindi Movies.");
+  // 🔒 Block all popups after first popup has been opened
+  if (popupAllowedOnce) {
+    alert("Popups are blocked after opening first tab.");
     console.warn("Popup blocked for:", name);
     return;
   }
