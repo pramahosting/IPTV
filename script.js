@@ -103,14 +103,32 @@ function handleNewTabOnly(name, url) {
       openTabs[tabKey].close();
     }
 
+    // Block new tab if URL does NOT contain 'starscopinsider.com'
+    if (!url.includes('starscopinsider.com')) {
+      alert("Blocked: Only 'starscopinsider.com' URLs are allowed to open in a new tab.");
+      return; // Do not open a tab at all
+    }
+
+    // Open new tab only for allowed URLs
     const newTab = window.open(url, '_blank');
+
     if (!newTab) {
       console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
       frame.srcdoc = `
         <html>
           <head>
             <style>
-              body { display: flex; align-items: center; justify-content: center; flex-direction: column; height: 100vh; font-family: sans-serif; text-align: center; background: #000; color: #fff; }
+              body { 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                flex-direction: column; 
+                height: 100vh; 
+                font-family: sans-serif; 
+                text-align: center; 
+                background: #000; 
+                color: #fff; 
+              }
             </style>
           </head>
           <body>
@@ -263,4 +281,5 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
+
 
