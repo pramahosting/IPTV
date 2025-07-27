@@ -167,7 +167,7 @@ function handleNewTabOnly(name, url) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderChannels();
-  autoPlayPlayDesi();
+  autoPlay();
 });
 
 // ✅ Moved outside any function: Refresh and Expand buttons
