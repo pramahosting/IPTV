@@ -6,7 +6,9 @@
   <title>PRAMA IPTV PLAYER</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="popup-blocker.css">
 </head>
+
 <body>
   <header>
     <div class="logo">
@@ -20,46 +22,60 @@
         Logout
       </button>
     </div>
-
-	<!-- Updated: only icon, no text -->
-	<button id="launch-fullscreen-btn" title="Toggle Fullscreen">
-  	  <i class="fas fa-expand-arrows-alt"></i>
-	</button>
-
+    <button id="launch-fullscreen-btn" title="Toggle Fullscreen">
+      <i class="fas fa-expand-arrows-alt"></i>
+    </button>
   </header>
-  
+
   <div id="login-modal">
     <div class="login-container">
       <h2>
         <i class="fas fa-user-lock"></i>
         Secure Login
       </h2>
+
       <div class="input-group">
         <i class="fas fa-user"></i>
         <input type="text" id="username" placeholder="Username" autocomplete="off">
       </div>
+
       <div class="input-group">
         <i class="fas fa-lock"></i>
         <input type="password" id="password" placeholder="Password" autocomplete="off">
       </div>
+
       <div id="login-error" class="error-message">Invalid username or password</div>
+
       <div class="remember-group">
         <input type="checkbox" id="remember-me">
         <label for="remember-me">Remember me</label>
       </div>
+
       <div class="btn-group">
-        <button class="login-btn" id="login-btn">
-          <i class="fas fa-sign-in-alt"></i>
-          Login
-        </button>
-        <button class="signup-btn" id="signup-btn">
-          <i class="fas fa-user-plus"></i>
-          Sign Up
-        </button>
+<!-- First row: Login and Sign Up -->
+<div class="button-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+  <button class="login-btn action-btn" id="login-btn">
+    <i class="fas fa-sign-in-alt"></i> Login
+  </button>
+  <button class="signup-btn action-btn" id="signup-btn">
+    <i class="fas fa-user-plus"></i> Sign Up
+  </button>
+</div>
+
+<!-- Second row: Reset Password and Delete Account -->
+<div class="button-row" style="display: flex; gap: 10px;">
+  <button class="reset-btn action-btn" id="reset-password-btn">
+    <i class="fas fa-key"></i> Reset Password
+  </button>
+  <button class="delete-btn action-btn" id="delete-account-btn">
+    <i class="fas fa-user-times"></i> Delete Account
+  </button>
+</div>
+
       </div>
     </div>
   </div>
-  
+
   <div class="main-container">
     <div class="sidebar">
       <div class="sidebar-content">
@@ -67,24 +83,24 @@
           <i class="fas fa-search"></i>
           <input type="text" id="search" placeholder="Search channels...">
         </div>
-        
+
         <div class="category">
           <h2><i class="fas fa-film"></i> Entertainment</h2>
           <div class="channel-list" id="entertainment-list"></div>
         </div>
-        
+
         <div class="category">
           <h2><i class="fas fa-newspaper"></i> News</h2>
           <div class="channel-list" id="news-list"></div>
         </div>
-        
+
         <div class="category">
           <h2><i class="fas fa-praying-hands"></i> Spiritual</h2>
           <div class="channel-list" id="spiritual-list"></div>
         </div>
       </div>
     </div>
-    
+
     <div class="player-container">
       <div class="player-header">
         <div id="playerTitle">
@@ -100,30 +116,20 @@
           </button>
         </div>
       </div>
-      
+
       <div class="player-content" id="player-content">
         <div class="loading-container" id="loading-container">
           <div class="spinner"></div>
           <div id="loading-text">Loading channel content...</div>
         </div>
-        <iframe id="player-frame" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+        <iframe id="player-frame" allowfullscreen></iframe>
       </div>
     </div>
   </div>
-  
-  <!-- Fullscreen overlay -->
-  <!--- <div id="fullscreen-overlay">
-    <button id="close-fullscreen">
-      <i class="fas fa-times"></i>
-    </button>
-    <iframe id="fullscreen-iframe"></iframe>
-  </div> --->
 
+  <!-- Scripts -->
   <script src="channels.js"></script>
   <script src="login.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
-
-
-
