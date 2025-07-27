@@ -3,12 +3,12 @@ let lastClicked = 0;
 let currentChannelElement = null;
 let currentLoadTimeout = null;
 
-function autoPlayPlayDesi() {
+function autoPlay() {
   if (currentUser) {
     setTimeout(() => {
-      const playdesiElement = document.querySelector('.channel[data-name="YuppTV"]');
-      if (playdesiElement) {
-        playdesiElement.click();
+      const autoPlayElement = document.querySelector('.channel[data-name="YuppTV"]');
+      if (autoPlayElement) {
+        autoPlayElement.click();
       }
     }, 100);
   }
