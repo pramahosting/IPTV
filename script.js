@@ -51,9 +51,10 @@ function showLandingPageMessage() {
         </style>
       </head>
       <body>
-        <h1>Welcome to Free IPTV Streaming</h1>
-        <h2>Please select a channel from the left sidebar to begin watching.</h2>
-        <h3>Note: Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</h3>
+        <h1 style="color: lightblue;">Welcome to Free IPTV Streaming</h1>
+        <h2>Please select a channel from the left sidebar to begin watching.</h2> <br><br><br><br>
+        <h2 style="color: orange;">Note</h2> 
+	<p>Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</p>
       </body>
     </html>`;
   
@@ -332,4 +333,3 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
-
