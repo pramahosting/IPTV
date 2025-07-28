@@ -289,7 +289,7 @@ function handleNewTabOnly(name, url) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderChannels();
-  autoPlay();
+  setTimeout(autoPlay, 100); // small delay to ensure DOM updates
 });
 
 document.getElementById('refresh-btn').addEventListener('click', () => {
@@ -337,3 +337,60 @@ window.addEventListener('message', (event) => {
   }
 });
 
+document.addEventListener("DOMContentLoaded", async () => {
+  // Brave detection
+  let isBrave = false;
+  if (navigator.brave) {
+    try {
+      isBrave = await navigator.brave.isBrave();
+    } catch (err) {
+      isBrave = false;
+    }
+  }
+
+  if (!isBrave) {
+    // Not Brave - block everything and show install message
+    document.body.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#111;color:white;text-align:center;font-family:sans-serif">
+        <h1>🚫 Unsupported Browser</h1>
+        <p>This IPTV player only works on the <strong>Brave Browser</strong>.</p>
+        <p>Please download and install Brave, and ensure <strong>Shields</strong> are set to <strong>Aggressive</strong>.</p>
+        <p><a href="https://brave.com/download/" target="_blank" style="color:deepskyblue;font-weight:bold">Download Brave Browser</a></p>
+      </div>
+    `;
+    return;
+  }
+
+  // Show friendly popup (non-blocking) suggesting to enable Aggressive Shields
+  showShieldsReminder();
+});
+
+function showShieldsReminder() {
+  const popup = document.createElement('div');
+  popup.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #222;
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 400px;
+      z-index: 9999;
+      text-align: center;
+      font-family: sans-serif;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    ">
+      <h2 style="margin-top:0;color:orange;">🛡️ Brave Shields Reminder</h2>
+      <p>For best experience, please ensure <strong>Brave Shields</strong> are set to <strong>Aggressive</strong> mode.</p>
+      <button style="margin-top:10px;padding:10px 20px;border:none;background:#28a745;color:white;border-radius:5px;cursor:pointer;" onclick="this.parentElement.remove()">Got it</button>
+    </div>
+  `;
+  document.body.appendChild(popup);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.documentElement.requestFullscreen?.().catch(() => {});
+});
