@@ -3,7 +3,7 @@ const playlist = [
   { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true },
   { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal" },
   { name: "ARY TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment" },
-  { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true },
+  { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true, blockUnsafe: true  },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment" },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment" },
   { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true, blockUnsafe: true },
@@ -13,7 +13,7 @@ const playlist = [
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true, blockUnsafe: true  },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
-  { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true}
+  { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true, blockUnsafe: true }
  ];
 
 function renderChannels() {
