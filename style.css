@@ -670,6 +670,11 @@ header {
     align-self: flex-end;
   }
 
+#error-message {
+  display: none;
+  color: red;
+}
+
 /* Ensure iframe fills container */
 .fullscreen-mode iframe {
   width: 100% !important;
