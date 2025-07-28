@@ -27,6 +27,11 @@
     </button>
   </header>
 
+<div style="background-color: #ff9800; color: black; padding: 10px; text-align: center;">
+  <strong>Note:</strong> Make sure Brave Shields are set to <strong>Aggressive</strong> for best privacy and performance.
+</div>
+
+
   <div id="login-modal">
     <div class="login-container">
       <h2>
@@ -143,5 +148,78 @@
       }
     });
   </script>
+
+<script>
+(async function enforceBraveBrowser() {
+  const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
+
+  if (!isBrave) {
+    // Hide everything
+    document.body.innerHTML = `
+      <div style="
+        background-color: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 80px 20px;
+      ">
+        <h1>🚫 Unsupported Browser</h1>
+        <p>This IPTV player only works on the <strong>Brave Browser</strong>.</p>
+        <p>Please download and install Brave, and ensure <strong>Shields</strong> are set to <strong>Aggressive</strong>.</p>
+        <p><a href="https://brave.com/download/" target="_blank" style="color:#ff9800;">Download Brave Browser</a></p>
+      </div>
+    `;
+  }
+})();
+</script>
+
+<script>
+async function checkBraveAggressiveShields() {
+  const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
+
+  if (!isBrave) return;
+
+  // Try loading a known ad server that aggressive mode blocks
+  const testUrl = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+
+  try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 2000); // timeout to avoid delay
+
+    const response = await fetch(testUrl, { method: "GET", mode: "no-cors", signal: controller.signal });
+
+    // If fetch does NOT throw, likely standard shields (not blocked)
+    showShieldPopup("Standard Shields Detected. Please switch to Aggressive for full privacy.");
+  } catch (e) {
+    // If fetch is blocked or failed = likely Aggressive shields are on
+    console.log("Aggressive Shields likely active.");
+  }
+}
+
+function showShieldPopup(message) {
+  const popup = document.createElement("div");
+  popup.style.position = "fixed";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = "#111";
+  popup.style.color = "#fff";
+  popup.style.padding = "30px";
+  popup.style.borderRadius = "12px";
+  popup.style.zIndex = "9999";
+  popup.style.boxShadow = "0 0 20px rgba(0,0,0,0.5)";
+  popup.innerHTML = `
+    <h2>⚠️ Shields Mode Warning</h2>
+    <p style="margin: 10px 0;">${message}</p>
+    <p>Please open the Brave browser menu, click <strong>“Shields”</strong> and set to <strong>Aggressive</strong>.</p>
+    <button style="margin-top: 10px; padding: 8px 16px; background: #ff9800; border: none; color: black; font-weight: bold; cursor: pointer;" onclick="this.parentNode.remove()">Dismiss</button>
+  `;
+  document.body.appendChild(popup);
+}
+
+checkBraveAggressiveShields();
+</script>
+
 </body>
 </html>
+
