@@ -52,26 +52,25 @@
       </div>
 
       <div class="btn-group">
-<!-- First row: Login and Sign Up -->
-<div class="button-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
-  <button class="login-btn action-btn" id="login-btn">
-    <i class="fas fa-sign-in-alt"></i> Login
-  </button>
-  <button class="signup-btn action-btn" id="signup-btn">
-    <i class="fas fa-user-plus"></i> Sign Up
-  </button>
-</div>
+        <!-- First row: Login and Sign Up -->
+        <div class="button-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+          <button class="login-btn action-btn" id="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button class="signup-btn action-btn" id="signup-btn">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </button>
+        </div>
 
-<!-- Second row: Reset Password and Delete Account -->
-<div class="button-row" style="display: flex; gap: 10px;">
-  <button class="reset-btn action-btn" id="reset-password-btn">
-    <i class="fas fa-key"></i> Reset Password
-  </button>
-  <button class="delete-btn action-btn" id="delete-account-btn">
-    <i class="fas fa-user-times"></i> Delete Account
-  </button>
-</div>
-
+        <!-- Second row: Reset Password and Delete Account -->
+        <div class="button-row" style="display: flex; gap: 10px;">
+          <button class="reset-btn action-btn" id="reset-password-btn">
+            <i class="fas fa-key"></i> Reset Password
+          </button>
+          <button class="delete-btn action-btn" id="delete-account-btn">
+            <i class="fas fa-user-times"></i> Delete Account
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -131,5 +130,18 @@
   <script src="channels.js"></script>
   <script src="login.js"></script>
   <script src="script.js"></script>
+
+  <!-- Capitalize first letter of username -->
+  <script>
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const usernameInput = document.getElementById('username');
+      const greeting = document.getElementById('user-greeting');
+      if (usernameInput.value) {
+        const name = usernameInput.value.trim();
+        const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
+        greeting.textContent = `Welcome, ${capitalized}!`;
+      }
+    });
+  </script>
 </body>
 </html>
