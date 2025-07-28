@@ -29,6 +29,9 @@ function showLandingPageMessage() {
   const title = document.getElementById('playerTitle');
   const loadingContainer = document.getElementById('loading-container');
 
+  const userName = currentUser?.name || '';
+  const capitalized = userName.charAt(0).toUpperCase() + userName.slice(1);
+
   frame.srcdoc = `
     <html>
       <head>
@@ -51,13 +54,13 @@ function showLandingPageMessage() {
         </style>
       </head>
       <body>
-        <h1 style="color: lightblue;">Welcome to Free IPTV Streaming</h1>
+        <h1 style="color: lightblue;">Welcome to Free IPTV Streaming${capitalized ? `, <span style='color: deepskyblue;'>${capitalized}</span>` : ''}!</h1>
         <h2>Please select a channel from the left sidebar to begin watching.</h2> <br><br><br><br>
         <h2 style="color: orange;">Note</h2> 
-	<p>Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</p>
+        <p>Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</p>
       </body>
     </html>`;
-  
+
   frame.style.display = 'block';
   if (loadingContainer) loadingContainer.style.display = 'none';
   if (title) title.innerHTML = `<i class="fas fa-info-circle"></i> Welcome`;
@@ -333,3 +336,4 @@ window.addEventListener('message', (event) => {
     window.open(url, '_blank');
   }
 });
+
