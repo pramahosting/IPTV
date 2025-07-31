@@ -3,6 +3,8 @@ let lastClicked = 0;
 let currentChannelElement = null;
 let currentLoadTimeout = null;
 
+const blockedFirstPopup = {}; // Keeps track of whether first click is already handled
+
 // 🔒 Allow only one popup (e.g., Hindi Movies)
 let popupAllowedOnce = false;
 
@@ -54,8 +56,11 @@ function showLandingPageMessage() {
         </style>
       </head>
       <body>
-        <h1 style="color: lightblue;">Welcome to Free IPTV Streaming${capitalized ? `, <span style='color: deepskyblue;'>${capitalized}</span>` : ''}!</h1>
-        <h2>Please select a channel from the left sidebar to begin watching.</h2> <br><br><br><br>
+        <h1 style="color: lightblue;">
+          Welcome to Free IPTV Streaming${capitalized ? `, <span style='color: deepskyblue;'>${capitalized}</span>` : ''}!
+        </h1>
+        <h2>Please select a channel from the left sidebar to begin watching.</h2> 
+        <br><br><br><br>
         <h2 style="color: orange;">Note</h2> 
         <p>Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</p>
       </body>
@@ -79,6 +84,11 @@ fsBtn.addEventListener('click', () => {
   }
 });
 
+// ✅ Helper to check if the channel should not open a popup
+function isUnsafe(channel) {
+  return channel.blockUnsafe === true;
+}
+
 function playChannel(channel, element) {
   if (!currentUser) {
     loginModal.style.display = 'flex';
@@ -97,9 +107,26 @@ function playChannel(channel, element) {
   element.classList.add('active');
   currentChannelElement = element;
 
+  // Simplify name for reliable matching
+  const simplifiedName = channel.name.toLowerCase().replace(/\s+/g, '');
+
+  // Force iframe load on first click for selected channels
+  const firstClickBlockList = ["indiantv", "playdesi"];
+  if (firstClickBlockList.includes(simplifiedName)) {
+    if (!blockedFirstPopup[simplifiedName]) {
+      channel.openInNewTab = false;  // force iframe on first click
+      blockedFirstPopup[simplifiedName] = true;
+    }
+  }
+
+  // Check if it should open in new tab
   if (channel.openInNewTab) {
-    handleNewTabOnly(channel.name, channel.url);
-    return;
+    if (isUnsafe(channel)) {
+      channel.openInNewTab = false;
+    } else {
+      handleNewTabOnly(channel.name, channel.url);
+      return;
+    }
   }
 
   title.innerHTML = `<i class="fas fa-play-circle"></i> Now Playing: ${channel.name}`;
@@ -126,32 +153,44 @@ function playChannel(channel, element) {
   if (channel.isSpecialIframe) {
     const sanitizedUrl = channel.url;
     frame.removeAttribute('src');
-    frame.srcdoc = `<!DOCTYPE html><html><head><style>html,body{margin:0;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none}</style></head><body><iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe><script>
-const innerFrame=document.getElementById('innerFrame');
-window.addEventListener('message', e => {
-  const url = e.data;
-  if (typeof url === 'string' && url.startsWith('https://starscopinsider.com')) window.open(url, '_blank');
-});
-innerFrame.onload = () => {
-  try {
-    const s = document.createElement('script');
-    s.textContent = \`
-      document.addEventListener('click', e => {
-        let el = e.target;
-        while (el && el.tagName !== 'A') el = el.parentElement;
-        if (el && el.href) {
-          e.preventDefault();
-          if (el.href.includes('starscopinsider.com')) parent.postMessage(el.href, '*');
-          else alert('Blocked: Only starscopinsider.com is allowed.');
-        }
-      });
-    \`;
-    innerFrame.contentWindow.document.body.appendChild(s);
-  } catch {
-    console.warn('Cross-origin script injection blocked');
-  }
-};
-</script></body></html>`;
+    frame.srcdoc = `<!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            html, body { margin:0; height:100%; overflow:hidden }
+            iframe { width:100%; height:100%; border:none }
+          </style>
+        </head>
+        <body>
+          <iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe>
+          <script>
+            const innerFrame = document.getElementById('innerFrame');
+            window.addEventListener('message', e => {
+              const url = e.data;
+              if (typeof url === 'string' && url.startsWith('https://starscopinsider.com')) window.open(url, '_blank');
+            });
+            innerFrame.onload = () => {
+              try {
+                const s = document.createElement('script');
+                s.textContent = \`
+                  document.addEventListener('click', e => {
+                    let el = e.target;
+                    while (el && el.tagName !== 'A') el = el.parentElement;
+                    if (el && el.href) {
+                      e.preventDefault();
+                      if (el.href.includes('starscopinsider.com')) parent.postMessage(el.href, '*');
+                      else alert('Blocked: Only starscopinsider.com is allowed.');
+                    }
+                  });
+                \`;
+                innerFrame.contentWindow.document.body.appendChild(s);
+              } catch {
+                console.warn('Cross-origin script injection blocked');
+              }
+            };
+          </script>
+        </body>
+      </html>`;
     return;
   }
 
@@ -176,19 +215,19 @@ function handleNewTabOnly(name, url) {
   frame.style.display = 'none';
   if (loadingContainer) loadingContainer.style.display = 'none';
 
-  // 🔒 Block all popups after first popup has been opened
-  if (popupAllowedOnce) {
-    alert("Popups are blocked after opening first tab.");
-    console.warn("Popup blocked for:", name);
-    return;
-  }
-
   try {
     if (openTabs[tabKey] && !openTabs[tabKey].closed) {
       openTabs[tabKey].close();
     }
 
     const newTab = window.open(url, '_blank');
+    //🔒 Block all popups after the first new tab is opened
+    if (popupAllowedOnce) {
+      alert(`Only one popup is allowed per session. '${name}' was blocked.`);
+      return;
+    }
+    openTabs[tabKey] = newTab;
+    popupAllowedOnce = true; // 👈 Set it right here
 
     if (!newTab) {
       console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
@@ -197,15 +236,6 @@ function handleNewTabOnly(name, url) {
         <h2>Popup Blocked</h2><p>Please allow popups for this site and try again.</p></body></html>`;
       frame.style.display = 'block';
       title.innerHTML = `<i class="fas fa-play-circle"></i> Popup Blocked for ${name}`;
-      return;
-    }
-
-    openTabs[tabKey] = newTab;
-
-    //🔒 Block all popups after the first new tab is opened
-    if (popupAllowedOnce) {
-      alert(`Only one popup is allowed per session. '${name}' was blocked.`);
-      popupAllowedOnce = true;
       return;
     }
 
@@ -394,3 +424,4 @@ function showShieldsReminder() {
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
+
