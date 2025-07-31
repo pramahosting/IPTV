@@ -13,8 +13,8 @@ const playlist = [
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true  },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
-  { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true, blockUnsafe: true},
-  { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", blockUnsafe: true}
+  { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
+  { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", blockUnsafe: true }
  ];
 
 function renderChannels() {
