@@ -3,8 +3,6 @@ let lastClicked = 0;
 let currentChannelElement = null;
 let currentLoadTimeout = null;
 
-const blockedFirstPopup = {}; // Keeps track of whether first click is already handled
-
 // 🔒 Allow only one popup (e.g., Hindi Movies)
 let popupAllowedOnce = false;
 
@@ -107,21 +105,9 @@ function playChannel(channel, element) {
   element.classList.add('active');
   currentChannelElement = element;
 
-  // Simplify name for reliable matching
-  const simplifiedName = channel.name.toLowerCase().replace(/\s+/g, '');
-
-  // Force iframe load on first click for selected channels
-  const firstClickBlockList = ["indiantv", "playdesi"];
-  if (firstClickBlockList.includes(simplifiedName)) {
-    if (!blockedFirstPopup[simplifiedName]) {
-      channel.openInNewTab = false;  // force iframe on first click
-      blockedFirstPopup[simplifiedName] = true;
-    }
-  }
-
-  // Check if it should open in new tab
   if (channel.openInNewTab) {
     if (isUnsafe(channel)) {
+      // Unsafe: force to load inside iframe instead of tab
       channel.openInNewTab = false;
     } else {
       handleNewTabOnly(channel.name, channel.url);
@@ -216,104 +202,101 @@ function handleNewTabOnly(name, url) {
   if (loadingContainer) loadingContainer.style.display = 'none';
 
   try {
+    // 🔒 Block all popups immediately (even the first)
+    if (popupAllowedOnce) {
+      alert(`Popups are blocked for this session. '${name}' was blocked.`);
+      return;
+    }
+
     if (openTabs[tabKey] && !openTabs[tabKey].closed) {
       openTabs[tabKey].close();
     }
 
     const newTab = window.open(url, '_blank');
-    //🔒 Block all popups after the first new tab is opened
-    if (popupAllowedOnce) {
-      alert(`Only one popup is allowed per session. '${name}' was blocked.`);
-      return;
-    }
-    openTabs[tabKey] = newTab;
-    popupAllowedOnce = true; // 👈 Set it right here
-
     if (!newTab) {
-      console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
-      frame.srcdoc = `
-        <html><body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
-        <h2>Popup Blocked</h2><p>Please allow popups for this site and try again.</p></body></html>`;
-      frame.style.display = 'block';
-      title.innerHTML = `<i class="fas fa-play-circle"></i> Popup Blocked for ${name}`;
+      alert(`Popup blocked by browser for '${name}'. Please allow popups.`);
       return;
     }
 
-    setTimeout(() => {
-      frame.srcdoc = `
-        <html>
-          <head>
-            <style>
-              body {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                height: 100vh;
-                font-family: sans-serif;
-                text-align: center;
-                background: #000;
-                color: #fff;
-              }
-              button {
-                margin-top: 10px;
-                padding: 10px 20px;
-                font-size: 16px;
-                background: #28a745;
-                border: none;
-                border-radius: 6px;
-                color: white;
-                cursor: pointer;
-              }
-            </style>
-          </head>
-          <body>
-            <h2 style='font-size:1.8rem;'>${name} is Playing in Another Tab</h2>
-            <p>Close the ${name} tab or click below to return.</p>
-            <button onclick="parent.postMessage('return-player', '*')">Return to Player</button> 
-          </body>
-        </html>`;
-      frame.style.display = 'block';
-      title.innerHTML = `<i class="fas fa-play-circle"></i> ${name} opened in another tab`;
-    }, 100);
-
-    document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
-
-    const checkClosed = setInterval(() => {
-      if (openTabs[tabKey] && openTabs[tabKey].closed) {
-        clearInterval(checkClosed);
-        resetPlayer();
-      }
-    }, 1000);
-
-    window.addEventListener('message', function handler(e) {
-      if (e.data === 'return-player') {
-        clearInterval(checkClosed);
-        window.removeEventListener('message', handler);
-        resetPlayer();
-      }
-    });
-
-    function resetPlayer() {
-      openTabs[tabKey] = null;
-      frame.removeAttribute('srcdoc');
-      frame.removeAttribute('src');
-      frame.src = 'about:blank';
-      frame.style.display = 'none';
-      title.innerHTML = `<i class="fas fa-play-circle"></i> Select a channel to start streaming`;
-      if (loadingContainer) loadingContainer.style.display = 'none';
-    }
+    openTabs[tabKey] = newTab;
+    popupAllowedOnce = true; // mark that a popup was attempted (even if you never allow it)
   } catch (e) {
-    console.error(`Error in handleNewTabOnly for ${name}:`, e);
+    console.error(e);
+  }
+
+  if (!newTab) {
+    console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
+    frame.srcdoc = `
+      <html><body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
+      <h2>Popup Blocked</h2><p>Please allow popups for this site and try again.</p></body></html>`;
+    frame.style.display = 'block';
+    title.innerHTML = `<i class="fas fa-play-circle"></i> Popup Blocked for ${name}`;
+    return;
+  }
+
+  setTimeout(() => {
     frame.srcdoc = `
       <html>
-        <body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
-          <h2>Error</h2>
-          <p>Failed to load ${name}. Please try again.</p>
+        <head>
+          <style>
+            body {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: column;
+              height: 100vh;
+              font-family: sans-serif;
+              text-align: center;
+              background: #000;
+              color: #fff;
+            }
+            button {
+              margin-top: 10px;
+              padding: 10px 20px;
+              font-size: 16px;
+              background: #28a745;
+              border: none;
+              border-radius: 6px;
+              color: white;
+              cursor: pointer;
+            }
+          </style>
+        </head>
+        <body>
+          <h2 style='font-size:1.8rem;'>${name} is Playing in Another Tab</h2>
+          <p>Close the ${name} tab or click below to return.</p>
+          <button onclick="parent.postMessage('return-player', '*')">Return to Player</button> 
         </body>
       </html>`;
     frame.style.display = 'block';
-    title.innerHTML = `<i class="fas fa-play-circle"></i> Error loading ${name}`;
+    title.innerHTML = `<i class="fas fa-play-circle"></i> ${name} opened in another tab`;
+  }, 100);
+
+  document.querySelectorAll('.channel').forEach(c => c.classList.remove('active'));
+
+  const checkClosed = setInterval(() => {
+    if (openTabs[tabKey] && openTabs[tabKey].closed) {
+      clearInterval(checkClosed);
+      resetPlayer();
+    }
+  }, 1000);
+
+  window.addEventListener('message', function handler(e) {
+    if (e.data === 'return-player') {
+      clearInterval(checkClosed);
+      window.removeEventListener('message', handler);
+      resetPlayer();
+    }
+  });
+
+  function resetPlayer() {
+    openTabs[tabKey] = null;
+    frame.removeAttribute('srcdoc');
+    frame.removeAttribute('src');
+    frame.src = 'about:blank';
+    frame.style.display = 'none';
+    title.innerHTML = `<i class="fas fa-play-circle"></i> Select a channel to start streaming`;
+    if (loadingContainer) loadingContainer.style.display = 'none';
   }
 }
 
@@ -424,4 +407,3 @@ function showShieldsReminder() {
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
-
