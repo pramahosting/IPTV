@@ -141,7 +141,7 @@ function playChannel(channel, element) {
   if (channel.sandboxLevel === "minimal") {
     frame.sandbox = "allow-scripts allow-popups";
   } else {
-    frame.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups";
+    frame.sandbox = "allow-scripts allow-same-origin allow-forms";
   }
 
   frame.onload = function () {
