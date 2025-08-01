@@ -8,12 +8,8 @@ let popupAllowedOnce = false;
 
 function autoPlay() {
   if (currentUser) {
-    // Optionally change this delay or remove it
     setTimeout(() => {
-      // By default, don't autoplay anything, just show welcome
       showLandingPageMessage();
-
-      // Uncomment this if you want to auto-select a default channel like Yupp TV
       /*
       const autoPlayElement = document.querySelector('.channel[data-name="Yupp TV"]');
       if (autoPlayElement) {
@@ -82,7 +78,6 @@ fsBtn.addEventListener('click', () => {
   }
 });
 
-// ✅ Helper to check if the channel should not open a popup
 function isUnsafe(channel) {
   return channel.blockUnsafe === true;
 }
@@ -107,7 +102,6 @@ function playChannel(channel, element) {
 
   if (channel.openInNewTab) {
     if (isUnsafe(channel)) {
-      // Unsafe: force to load inside iframe instead of tab
       channel.openInNewTab = false;
     } else {
       handleNewTabOnly(channel.name, channel.url);
@@ -119,8 +113,52 @@ function playChannel(channel, element) {
   loadingContainer.style.display = 'flex';
   frame.style.display = 'none';
 
-  if (currentLoadTimeout) clearTimeout(currentLoadTimeout);
+  const messageBarId = 'channel-hint-bar';
+  document.getElementById(messageBarId)?.remove();
 
+function playChannel(channel, element) {
+  // 🧹 Always remove previous message bar (if any)
+  const oldBar = document.getElementById('channel-info-bar');
+  if (oldBar) oldBar.remove();
+
+  // ... your existing channel handling logic ...
+
+
+// Define the message based on channel name
+const name = channel.name.trim().toLowerCase();
+let message = null;
+
+if (name === 'abzy tv') {
+  message = 'ℹ️ Please right-click on ABZY Channel and select "Open link in new tab".';
+} else if (name === 'indian tv') {
+  message = 'ℹ️ Please right-click on the CLICK HERE button and select "Open link in new tab".';
+} else if (name === 'play desi') {
+  message = 'ℹ️ Please right-click on the watch online video and select "Open link in new tab".';
+}
+
+// If a message exists, create and show the bar
+if (message) {
+  const bar = document.createElement('div');
+  bar.id = 'channel-info-bar';
+  bar.style.cssText = `
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: center;
+    font-family: sans-serif;
+    z-index: 9999;
+  `;
+  bar.innerText = message;
+
+  const container = document.getElementById('player-content') || document.body;
+  container.appendChild(bar);
+}
+  if (currentLoadTimeout) clearTimeout(currentLoadTimeout);
   frame.removeAttribute('srcdoc');
   frame.removeAttribute('src');
 
@@ -148,12 +186,12 @@ function playChannel(channel, element) {
           </style>
         </head>
         <body>
-          <iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe>
+          <iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen' </iframe>
           <script>
             const innerFrame = document.getElementById('innerFrame');
             window.addEventListener('message', e => {
               const url = e.data;
-              if (typeof url === 'string' && url.startsWith('https://starscopinsider.com')) window.open(url, '_blank');
+              if (typeof url === 'string' && url.startsWith('starscopinsider.com')) window.open(url, '_blank');
             });
             innerFrame.onload = () => {
               try {
@@ -164,8 +202,9 @@ function playChannel(channel, element) {
                     while (el && el.tagName !== 'A') el = el.parentElement;
                     if (el && el.href) {
                       e.preventDefault();
-                      if (el.href.includes('starscopinsider.com')) parent.postMessage(el.href, '*');
-                      else alert('Blocked: Only starscopinsider.com is allowed.');
+
+                      if (el.href.includes('starscopinsider.com' || el.href.includes('youtube.com')) parent.postMessage(el.href, '*');
+                      else alert('Blocked: Only starscopinsider.com and youtube.com are allowed.');
                     }
                   });
                 \`;
@@ -202,30 +241,14 @@ function handleNewTabOnly(name, url) {
   if (loadingContainer) loadingContainer.style.display = 'none';
 
   try {
-    // 🔒 Block all popups immediately (even the first)
-    if (popupAllowedOnce) {
-      alert(`Popups are blocked for this session. '${name}' was blocked.`);
-      return;
-    }
-
-    if (openTabs[tabKey] && !openTabs[tabKey].closed) {
-      openTabs[tabKey].close();
-    }
-
     const newTab = window.open(url, '_blank');
-    if (!newTab) {
-      alert(`Popup blocked by browser for '${name}'. Please allow popups.`);
-      return;
-    }
-
     openTabs[tabKey] = newTab;
-    popupAllowedOnce = true; // mark that a popup was attempted (even if you never allow it)
+    popupAllowedOnce = true;
   } catch (e) {
     console.error(e);
   }
 
-  if (!newTab) {
-    console.error(`Failed to open new tab for ${name}. Popup may be blocked.`);
+  if (!openTabs[tabKey]) {
     frame.srcdoc = `
       <html><body style="color:white;background:black;text-align:center;display:flex;flex-direction:column;justify-content:center;height:100vh">
       <h2>Popup Blocked</h2><p>Please allow popups for this site and try again.</p></body></html>`;
@@ -302,7 +325,7 @@ function handleNewTabOnly(name, url) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderChannels();
-  setTimeout(autoPlay, 100); // small delay to ensure DOM updates
+  setTimeout(autoPlay, 100);
 });
 
 document.getElementById('refresh-btn').addEventListener('click', () => {
@@ -351,7 +374,6 @@ window.addEventListener('message', (event) => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Brave detection
   let isBrave = false;
   if (navigator.brave) {
     try {
@@ -362,19 +384,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (!isBrave) {
-    // Not Brave - block everything and show install message
     document.body.innerHTML = `
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#111;color:white;text-align:center;font-family:sans-serif">
         <h1>🚫 Unsupported Browser</h1>
         <p>This IPTV player only works on the <strong>Brave Browser</strong>.</p>
         <p>Please download and install Brave, and ensure <strong>Shields</strong> are set to <strong>Aggressive</strong>.</p>
         <p><a href="https://brave.com/download/" target="_blank" style="color:deepskyblue;font-weight:bold">Download Brave Browser</a></p>
-      </div>
-    `;
+      </div>`;
     return;
   }
 
-  // Show friendly popup (non-blocking) suggesting to enable Aggressive Shields
   showShieldsReminder();
 });
 
@@ -399,11 +418,11 @@ function showShieldsReminder() {
       <h2 style="margin-top:0;color:orange;">🛡️ Brave Shields Reminder</h2>
       <p>For best experience, please ensure <strong>Brave Shields</strong> are set to <strong>Aggressive</strong> mode.</p>
       <button style="margin-top:10px;padding:10px 20px;border:none;background:#28a745;color:white;border-radius:5px;cursor:pointer;" onclick="this.parentElement.remove()">Got it</button>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(popup);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
+
