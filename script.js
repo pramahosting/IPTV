@@ -2,9 +2,7 @@ let openTabs = {};
 let lastClicked = 0;
 let currentChannelElement = null;
 let currentLoadTimeout = null;
-
-// 🔒 Allow only one popup (e.g., Hindi Movies)
-let popupAllowedOnce = false;
+let popupAllowedOnce = false; // 🔒 Allow only one popup (e.g., Hindi Movies)
 
 function autoPlay() {
   if (currentUser) {
@@ -113,60 +111,49 @@ function playChannel(channel, element) {
   loadingContainer.style.display = 'flex';
   frame.style.display = 'none';
 
-  const messageBarId = 'channel-hint-bar';
-  document.getElementById(messageBarId)?.remove();
+  document.getElementById('channel-hint-bar')?.remove();
+  document.getElementById('channel-info-bar')?.remove();
 
-function playChannel(channel, element) {
-  // 🧹 Always remove previous message bar (if any)
-  const oldBar = document.getElementById('channel-info-bar');
-  if (oldBar) oldBar.remove();
+  const name = channel.name.trim().toLowerCase();
+  let message = null;
 
-  // ... your existing channel handling logic ...
+  if (name === 'abzy tv') {
+    message = 'ℹ️ Please right-click on ABZY Channel and select "Open link in new tab".';
+  } else if (name === 'indian tv') {
+    message = 'ℹ️ Please right-click on the CLICK HERE button and select "Open link in new tab".';
+  } else if (name === 'play desi') {
+    message = 'ℹ️ Please right-click on the watch online video and select "Open link in new tab".';
+  }
 
+  if (message) {
+    const bar = document.createElement('div');
+    bar.id = 'channel-info-bar';
+    bar.style.cssText = `
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(30, 30, 30, 0.95);
+      color: #fff;
+      font-size: 14px;
+      padding: 8px 12px;
+      text-align: center;
+      font-family: sans-serif;
+      z-index: 9999;
+    `;
+    bar.innerText = message;
 
-// Define the message based on channel name
-const name = channel.name.trim().toLowerCase();
-let message = null;
+    const container = document.getElementById('player-content') || document.body;
+    container.appendChild(bar);
+  }
 
-if (name === 'abzy tv') {
-  message = 'ℹ️ Please right-click on ABZY Channel and select "Open link in new tab".';
-} else if (name === 'indian tv') {
-  message = 'ℹ️ Please right-click on the CLICK HERE button and select "Open link in new tab".';
-} else if (name === 'play desi') {
-  message = 'ℹ️ Please right-click on the watch online video and select "Open link in new tab".';
-}
-
-// If a message exists, create and show the bar
-if (message) {
-  const bar = document.createElement('div');
-  bar.id = 'channel-info-bar';
-  bar.style.cssText = `
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(30, 30, 30, 0.95);
-    color: #fff;
-    font-size: 14px;
-    padding: 8px 12px;
-    text-align: center;
-    font-family: sans-serif;
-    z-index: 9999;
-  `;
-  bar.innerText = message;
-
-  const container = document.getElementById('player-content') || document.body;
-  container.appendChild(bar);
-}
   if (currentLoadTimeout) clearTimeout(currentLoadTimeout);
   frame.removeAttribute('srcdoc');
   frame.removeAttribute('src');
 
-  if (channel.sandboxLevel === "minimal") {
-    frame.sandbox = "allow-scripts";
-  } else {
-    frame.sandbox = "allow-scripts allow-same-origin allow-forms";
-  }
+  frame.sandbox = channel.sandboxLevel === "minimal"
+    ? "allow-scripts"
+    : "allow-scripts allow-same-origin allow-forms";
 
   frame.onload = function () {
     if (currentLoadTimeout) clearTimeout(currentLoadTimeout);
@@ -176,8 +163,8 @@ if (message) {
 
   if (channel.isSpecialIframe) {
     const sanitizedUrl = channel.url;
-    frame.removeAttribute('src');
-    frame.srcdoc = `<!DOCTYPE html>
+    frame.srcdoc = `
+      <!DOCTYPE html>
       <html>
         <head>
           <style>
@@ -186,7 +173,7 @@ if (message) {
           </style>
         </head>
         <body>
-          <iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen' </iframe>
+          <iframe id='innerFrame' src='${sanitizedUrl}' sandbox='allow-scripts allow-popups allow-same-origin allow-forms' allow='fullscreen'></iframe>
           <script>
             const innerFrame = document.getElementById('innerFrame');
             window.addEventListener('message', e => {
@@ -202,8 +189,7 @@ if (message) {
                     while (el && el.tagName !== 'A') el = el.parentElement;
                     if (el && el.href) {
                       e.preventDefault();
-
-                      if (el.href.includes('starscopinsider.com' || el.href.includes('youtube.com')) parent.postMessage(el.href, '*');
+                      if (el.href.includes('starscopinsider.com') || el.href.includes('youtube.com')) parent.postMessage(el.href, '*');
                       else alert('Blocked: Only starscopinsider.com and youtube.com are allowed.');
                     }
                   });
@@ -358,10 +344,8 @@ document.getElementById('expand-btn').addEventListener('click', () => {
   }
 
   const icon = document.querySelector('#expand-btn i');
-  if (playerContent.classList.contains('expanded')) {
-    icon.className = 'fas fa-compress';
-  } else {
-    icon.className = 'fas fa-expand';
+  icon.className = playerContent.classList.contains('expanded') ? 'fas fa-compress' : 'fas fa-expand';
+  if (!playerContent.classList.contains('expanded')) {
     document.getElementById('expanded-controls')?.remove();
   }
 });
@@ -425,4 +409,5 @@ function showShieldsReminder() {
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
+
 
