@@ -1,7 +1,7 @@
 // Channel data - sorted alphabetically in each category
 const playlist = [
   { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", isSpecialIframe: true, blockUnsafe: true },
-  { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal" },
+  { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", sandboxLevel: "minimal", blockUnsafe: true },
   { name: "ARY TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment" },
   { name: "Einthusan", url: "https://einthusan.tv/launcher/?lang=hindi", icon: "fa-video", category: "entertainment", openInNewTab: true },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment" },
@@ -14,7 +14,7 @@ const playlist = [
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true  },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
-  { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", blockUnsafe: true }
+  { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", blockUnsafe: true}
  ];
 
 function renderChannels() {
