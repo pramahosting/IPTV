@@ -11,7 +11,7 @@ const playlist = [
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment", language: "hindi" },
   { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment", language: "hindi" },
-  { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
+  { name: "Indian Serials", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
   { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi" },
@@ -79,4 +79,5 @@ function createChannelElement(channel) {
   el.addEventListener('click', () => playChannel(channel, el));
   return el;
 }
+
 
