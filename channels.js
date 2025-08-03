@@ -14,7 +14,7 @@ const playlist = [
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment", language: "hindi" },
   { name: "Indian Serials", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
-  { name: "Pakistan TV", url: "https://tvonepk.tv/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
+  { name: "Pakistani Dramas", url: "https://tvonepk.tv/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
   { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi" },
   { name: "SBS TV", url: "https://www.sbs.com.au/ondemand/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
@@ -85,3 +85,4 @@ function renderChannels() {
     });
   });
 }
+
