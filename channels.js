@@ -15,6 +15,8 @@ const playlist = [
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "Tubi TV", url: "https://tubitv.com/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
+  { name: "SBS TV", url: "https://www.sbs.com.au/ondemand/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
+  { name: "ABC TV", url: "https://iview.abc.net.au/", icon: "fa-play-circle", category: "entertainment", openInNewTab: true },
   { name: "Indian TV", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", blockUnsafe: true}
  ];
 
@@ -62,4 +64,3 @@ function createChannelElement(channel) {
   el.addEventListener('click', () => playChannel(channel, el));
   return el;
 }
-
