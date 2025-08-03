@@ -372,7 +372,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  showShieldsReminder();
+  // Show Shields Reminder Only Once
+  if (!sessionStorage.getItem("braveShieldsReminderShown")) {
+    showShieldsReminder();
+    sessionStorage.setItem("braveShieldsReminderShown", "true");
+  }
 });
 
 function showShieldsReminder() {
@@ -403,6 +407,7 @@ function showShieldsReminder() {
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
+
 
 
 
