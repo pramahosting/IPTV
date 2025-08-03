@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PRAMA IPTV PLAYER</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="popup-blocker.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="popup-blocker.css" />
 </head>
 
 <body>
@@ -27,7 +27,7 @@
     </button>
   </header>
 
-  <div id="login-modal">
+  <div id="login-modal" style="display: flex;">
     <div class="login-container">
       <h2>
         <i class="fas fa-user-lock"></i>
@@ -36,18 +36,18 @@
 
       <div class="input-group">
         <i class="fas fa-user"></i>
-        <input type="text" id="username" placeholder="Username" autocomplete="off">
+        <input type="text" id="username" placeholder="Username" autocomplete="off" />
       </div>
 
       <div class="input-group">
         <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" autocomplete="off">
+        <input type="password" id="password" placeholder="Password" autocomplete="off" />
       </div>
 
-      <div id="login-error" class="error-message">Invalid username or password</div>
+      <div id="login-error" class="error-message" style="display:none;">Invalid username or password</div>
 
       <div class="remember-group">
-        <input type="checkbox" id="remember-me">
+        <input type="checkbox" id="remember-me" />
         <label for="remember-me">Remember me</label>
       </div>
 
@@ -80,7 +80,7 @@
       <div class="sidebar-content">
         <div class="search-container">
           <i class="fas fa-search"></i>
-          <input type="text" id="search" placeholder="Search channels...">
+          <input type="text" id="search" placeholder="Search channels..." />
         </div>
 
         <div class="category">
@@ -131,44 +131,46 @@
   <script src="login.js"></script>
   <script src="script.js"></script>
 
-  <!-- Capitalize first letter of username -->
+  <!-- Capitalize first letter of username after login click -->
   <script>
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const usernameInput = document.getElementById('username');
-      const greeting = document.getElementById('user-greeting');
-      if (usernameInput.value) {
-        const name = usernameInput.value.trim();
-        const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
-        greeting.textContent = `Welcome, ${capitalized}!`;
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('login-btn').addEventListener('click', () => {
+        const usernameInput = document.getElementById('username');
+        const greeting = document.getElementById('user-greeting');
+        if (usernameInput.value) {
+          const name = usernameInput.value.trim();
+          const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
+          greeting.textContent = `Welcome, ${capitalized}!`;
+        }
+      });
     });
   </script>
 
-<script>
-(async function enforceBraveBrowser() {
-  const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
+  <!-- Brave browser enforcement -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      (async function enforceBraveBrowser() {
+        const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
 
-  if (!isBrave) {
-    // Hide everything
-    document.body.innerHTML = `
-      <div style="
-        background-color: #111;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 80px 20px;
-      ">
-        <h1>🚫 Unsupported Browser</h1>
-        <p>This IPTV player only works on the <strong>Brave Browser</strong>.</p>
-        <p>Please download and install Brave, and ensure <strong>Shields</strong> are set to <strong>Aggressive</strong>.</p>
-        <p><a href="https://brave.com/download/" target="_blank" style="color:#ff9800;">Download Brave Browser</a></p>
-      </div>
-    `;
-  }
-})();
-</script>
-
+        if (!isBrave) {
+          document.body.innerHTML = `
+            <div style="
+              background-color: #111;
+              color: #fff;
+              font-family: Arial, sans-serif;
+              text-align: center;
+              padding: 80px 20px;
+            ">
+              <h1>🚫 Unsupported Browser</h1>
+              <p>This IPTV player only works on the <strong>Brave Browser</strong>.</p>
+              <p>Please download and install Brave, and ensure <strong>Shields</strong> are set to <strong>Aggressive</strong>.</p>
+              <p><a href="https://brave.com/download/" target="_blank" style="color:#ff9800;">Download Brave Browser</a></p>
+            </div>
+          `;
+        }
+      })();
+    });
+  </script>
 </body>
 </html>
-
 
