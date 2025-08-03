@@ -8,12 +8,6 @@ function autoPlay() {
   if (currentUser) {
     setTimeout(() => {
       showLandingPageMessage();
-      /*
-      const autoPlayElement = document.querySelector('.channel[data-name="Yupp TV"]');
-      if (autoPlayElement) {
-        autoPlayElement.click();
-      }
-      */
     }, 100);
   }
 }
@@ -409,5 +403,6 @@ function showShieldsReminder() {
 document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.requestFullscreen?.().catch(() => {});
 });
+
 
 
