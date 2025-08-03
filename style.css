@@ -46,6 +46,10 @@ header {
   z-index: 10;
 }
 
+#delete-account-btn {
+  display: none !important;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -694,3 +698,4 @@ header {
   cursor: pointer;               /* this sets the pointer cursor on hover, not color */
 }
 }
+
