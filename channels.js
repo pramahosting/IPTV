@@ -10,14 +10,17 @@ const playlist = [
   { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news", language: "hindi" },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment", language: "hindi" },
-  { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
+  { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true, blockUnsafe: true },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment", language: "hindi" },
   { name: "Indian Serials", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Pakistani Dramas", url: "https://tvonepk.tv/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
-  { name: "Web Series", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi" },
+  { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi", blockUnsafe: true },
   { name: "SBS TV", url: "https://www.sbs.com.au/ondemand/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
+  { name: "Channel 7", url: "https://7plus.com.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
+  { name: "Channel 10", url: "https://10.com.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
+  { name: "Channel 9", url: "https://www.9now.com.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Tubi TV", url: "https://tubitv.com/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
   { name: "Bx TV", url: "https://bx-tv.com/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Apne TV", url: "https://apne.co/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
@@ -89,6 +92,7 @@ function renderChannels() {
     });
   });
 }
+
 
 
 
