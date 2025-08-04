@@ -48,7 +48,7 @@ function showLandingPageMessage() {
         <h2>Please select a channel from the left sidebar to begin watching.</h2> 
         <br><br><br><br>
         <h2 style="color: orange;">Note</h2> 
-        <p>Some channels may open a popup tab containing advertisements. Simply close that tab and continue watching here.</p>
+        <p>Some channels may require opening via right-click. If needed, an instruction message will appear at the bottom of the right pane.</p>
       </body>
     </html>`;
 
