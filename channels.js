@@ -19,6 +19,10 @@ const playlist = [
   { name: "Web Series", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi" },
   { name: "SBS TV", url: "https://www.sbs.com.au/ondemand/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Tubi TV", url: "https://tubitv.com/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
+  { name: "Bx TV", url: "https://bx-tv.com/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
+  { name: "Apne TV", url: "https://apne.co/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
+  { name: "Hindi TV Box", url: "https://feedreader.com/observe/desitvbox.com/+view", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
+  { name: "English Live", url: "https://www.livehdtv.com/kategori/english/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Indian News", url: "https://www.yupptv.com/fast-tv", icon: "fa-satellite", category: "news", language: "hindi" }
 ];
 
@@ -85,6 +89,7 @@ function renderChannels() {
     });
   });
 }
+
 
 
 
