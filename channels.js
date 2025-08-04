@@ -1,6 +1,6 @@
 // Channel data - sorted alphabetically in each category
 const playlist = [
-  { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", language: "hindi" },
+  { name: "Abzy TV", url: "https://abzy.com", icon: "fa-tv", category: "entertainment", language: "hindi", sandboxLevel: "minimal", blockUnsafe: true },
   { name: "ABC TV", url: "https://iview.abc.net.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Aastha TV", url: "https://www.aasthatv.tv/", icon: "fa-om", category: "spiritual" },
   { name: "ARY TV", url: "https://www.aryzindagi.tv/", icon: "fa-heart", category: "entertainment", language: "hindi" },
@@ -85,4 +85,5 @@ function renderChannels() {
     });
   });
 }
+
 
