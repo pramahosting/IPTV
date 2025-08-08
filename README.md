@@ -31,7 +31,7 @@ An AI-powered, modular Streamlit application that generates interactive dashboar
    ```
 4. Run the app:
    ```bash
-   streamlit run prama_dashboard_agent/app.py
+   streamlit run app.py
    ```
 
 ### Default Admin Credentials
@@ -49,8 +49,8 @@ The app will try to call `http://localhost:11434` for enhanced insights.
 
 ### Project Structure
 ```
+app.py
 prama_dashboard_agent/
-  app.py
   core/
     auth.py
     db.py
@@ -71,6 +71,9 @@ prama_dashboard_agent/
 sample_data/
   banking_customers.csv
   sample.sql
+data/
+logs/
+output/
 requirements.txt
 README.md
 ```
