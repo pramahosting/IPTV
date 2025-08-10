@@ -10,7 +10,7 @@ const playlist = [
   { name: "Free Live TV", url: "https://www.freelivetv.org/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Geo News", url: "https://live.geo.tv/", icon: "fa-bullhorn", category: "news", language: "hindi" },
   { name: "Geo TV", url: "https://www.harpalgeo.tv/", icon: "fa-globe", category: "entertainment", language: "hindi" },
-  { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true, blockUnsafe: true },
+  { name: "Hindi Movies", url: "https://yomovies.design/", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Hum TV", url: "https://hum.tv/", icon: "fa-film", category: "entertainment", language: "hindi" },
   { name: "Indian Serials", url: "https://www.bollyzone.to/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
@@ -92,6 +92,7 @@ function renderChannels() {
     });
   });
 }
+
 
 
 
