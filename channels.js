@@ -16,7 +16,7 @@ const playlist = [
   { name: "Old Hindi Movies", url: "https://youtube.com/playlist?list=PLafSq5UblCNWcweoEqCDqZ76FmADCuGSf", icon: "fa-play-circle", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "Pakistani Dramas", url: "https://tvonepk.tv/", icon: "fa-play-circle", category: "entertainment", language: "hindi" },
   { name: "Plex TV", url: "https://www.plex.tv/", icon: "fa-play-circle", category: "entertainment", language: "english", openInNewTab: true },
-  { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi", blockUnsafe: true, openInNewTab: true },
+  { name: "Play Desi", url: "https://playdesi.info/", icon: "fa-bolt", category: "entertainment", language: "hindi", openInNewTab: true },
   { name: "SBS TV", url: "https://www.sbs.com.au/ondemand/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Channel 7", url: "https://7plus.com.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
   { name: "Channel 10", url: "https://10.com.au/", icon: "fa-play-circle", category: "news", language: "english", openInNewTab: true },
@@ -92,6 +92,7 @@ function renderChannels() {
     });
   });
 }
+
 
 
 
